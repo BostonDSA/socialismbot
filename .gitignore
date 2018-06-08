@@ -7,3 +7,7 @@
 
 # .tfvars files
 *.tfvars
+
+# app
+**/terraform.tf
+**/client_secret.json

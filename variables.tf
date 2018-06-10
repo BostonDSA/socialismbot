@@ -114,9 +114,24 @@ variable "chapter_sms_callback_id" {
   default     = "chapter_sms"
 }
 
-variable "chapter_sms_element" {
-  description = "Element name of interactive component containing SMS message."
-  default     = "chapter_sms"
+variable "chapter_sms_dialog_element_hint" {
+  description = "Dialog textarea hint."
+  default     = "This will send a text to the entire chapter."
+}
+
+variable "chapter_sms_dialog_element_label" {
+  description = "Dialog textarea label."
+  default     = "Message"
+}
+
+variable "chapter_sms_dialog_element_max_length" {
+  description = "Dialog textarea max characters."
+  default     = 140
+}
+
+variable "chapter_sms_dialog_title" {
+  description = "Dialog title."
+  default     = "Chapter SMS"
 }
 
 variable "chapter_sms_group_sms_default_sender_id" {
@@ -161,6 +176,48 @@ variable "chapter_sms_group_sms_topic_name" {
 variable "chapter_sms_group_sms_usage_report_s3_bucket" {
   description = "The Amazon S3 bucket to receive daily SMS usage reports. The bucket policy must grant write access to Amazon SNS."
   default     = ""
+}
+
+variable "chapter_sms_slash_command_auth_channels_exclude" {
+  description = "Optional list of Slack channel IDs to blacklist."
+  type        = "list"
+  default     = []
+}
+
+variable "chapter_sms_slash_command_auth_channels_include" {
+  description = "Optional list of Slack channel IDs to whitelist."
+  type        = "list"
+  default     = []
+}
+
+variable "chapter_sms_slash_command_auth_channels_permission_denied" {
+  description = "Permission denied message for channels."
+  type        = "map"
+
+  default {
+    text = "Sorry, you can't do that in this channel."
+  }
+}
+
+variable "chapter_sms_slash_command_auth_users_exclude" {
+  description = "Optional list of Slack user IDs to blacklist."
+  type        = "list"
+  default     = []
+}
+
+variable "chapter_sms_slash_command_auth_users_include" {
+  description = "Optional list of Slack user IDs to whitelist."
+  type        = "list"
+  default     = []
+}
+
+variable "chapter_sms_slash_command_auth_users_permission_denied" {
+  description = "Permission denied message for users."
+  type        = "map"
+
+  default {
+    text = "Sorry, you don't have permission to do that."
+  }
 }
 
 variable "chapter_sms_slash_command_function_name" {

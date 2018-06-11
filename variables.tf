@@ -195,7 +195,7 @@ variable "chapter_sms_slash_command_auth_channels_permission_denied" {
   type        = "map"
 
   default {
-    text = "Sorry, you can't do that in this channel."
+    text = ":tv: Sorry, you can't do that in this channel."
   }
 }
 
@@ -216,8 +216,13 @@ variable "chapter_sms_slash_command_auth_users_permission_denied" {
   type        = "map"
 
   default {
-    text = "Sorry, you don't have permission to do that."
+    text = ":crying-cat-face: Sorry, you don't have permission to do that."
   }
+}
+
+variable "chapter_sms_slash_command_description" {
+  description = "Description of the function."
+  default     = "Chapter-SMS slash command"
 }
 
 variable "chapter_sms_slash_command_function_name" {
@@ -225,33 +230,19 @@ variable "chapter_sms_slash_command_function_name" {
   default     = "slack-sms-slash-command"
 }
 
-variable "chapter_sms_slash_command_memory" {
-  description = "Memory for Cloud Function."
-  default     = 2048
-}
-
-variable "chapter_sms_slash_command_response" {
-  description = "Timeout in seconds for Slack event listener."
+variable "chapter_sms_slash_command_labels" {
+  description = "A set of key/value label pairs to assign to the function."
   type        = "map"
+
   default {
-    callback_id  = "chapter_sms"
-    submit_label = "Send"
-    title        = "Chapter SMS"
-    elements     = [
-      {
-        hint       = "This will send a text to the whole chapter."
-        label      = "Message"
-        max_length = "140"
-        name       = "chapter_sms"
-        type       = "textarea"
-      }
-    ]
+    app             = "chapter-sms"
+    deployment-tool = "terraform"
   }
 }
 
-variable "chapter_sms_slash_command_response_type" {
-  description = "Response type of command."
-  default     = "dialog"
+variable "chapter_sms_slash_command_memory" {
+  description = "Memory for Cloud Function."
+  default     = 2048
 }
 
 variable "chapter_sms_slash_command_timeout" {
@@ -259,9 +250,24 @@ variable "chapter_sms_slash_command_timeout" {
   default     = 10
 }
 
+variable "chapter_sms_sms_description" {
+  description = "Description of the function."
+  default     = "Chapter-SMS publisher"
+}
+
 variable "chapter_sms_sms_function_name" {
   description = "Cloud Function for publishing events from Slack to Pub/Sub."
   default     = "slack-sms"
+}
+
+variable "chapter_sms_sms_labels" {
+  description = "A set of key/value label pairs to assign to the function."
+  type        = "map"
+
+  default {
+    app             = "chapter-sms"
+    deployment-tool = "terraform"
+  }
 }
 
 variable "chapter_sms_sms_memory" {

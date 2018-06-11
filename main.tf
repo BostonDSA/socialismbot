@@ -29,12 +29,12 @@ module "events" {
   bucket_name        = "${google_storage_bucket.bucket.name}"
   bucket_prefix      = "${var.events_bucket_prefix}"
   client_secret      = "${file("${var.client_secret}")}"
+  event_types        = ["${var.events_event_types}"]
   function_name      = "${var.events_function_name}"
   memory             = "${var.events_memory}"
   project            = "${var.project}"
   timeout            = "${var.events_timeout}"
   verification_token = "${var.verification_token}"
-  event_types        = ["${var.events_event_types}"]
 }
 
 module "interactive_components" {
@@ -53,7 +53,7 @@ module "interactive_components" {
 
 module "chapter_sms" {
   source                                          = "amancevice/slack-sms/google"
-  version                                         = "0.2.0"
+  version                                         = "0.2.4"
   aws_access_key_id                               = "${var.aws_access_key_id}"
   aws_region                                      = "${var.aws_region}"
   aws_secret_access_key                           = "${var.aws_secret_access_key}"
@@ -79,11 +79,14 @@ module "chapter_sms" {
   slash_command_auth_users_exclude                = "${var.chapter_sms_slash_command_auth_users_exclude}"
   slash_command_auth_users_include                = "${var.chapter_sms_slash_command_auth_users_include}"
   slash_command_auth_users_permission_denied      = "${var.chapter_sms_slash_command_auth_users_permission_denied}"
+  slash_command_description                       = "${var.chapter_sms_slash_command_description}"
   slash_command_function_name                     = "${var.chapter_sms_slash_command_function_name}"
+  slash_command_labels                            = "${var.chapter_sms_slash_command_labels}"
   slash_command_memory                            = "${var.chapter_sms_slash_command_memory}"
-  slash_command_response_type                     = "${var.chapter_sms_slash_command_response_type}"
   slash_command_timeout                           = "${var.chapter_sms_slash_command_timeout}"
+  sms_description                                 = "${var.chapter_sms_sms_description}"
   sms_function_name                               = "${var.chapter_sms_sms_function_name}"
+  sms_labels                                      = "${var.chapter_sms_sms_labels}"
   sms_memory                                      = "${var.chapter_sms_sms_memory}"
   sms_timeout                                     = "${var.chapter_sms_sms_timeout}"
   verification_token                              = "${var.verification_token}"

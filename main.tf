@@ -25,7 +25,7 @@ resource "google_storage_bucket_iam_member" "member" {
 
 module "events" {
   source             = "amancevice/slack-events/google"
-  version            = "0.2.5"
+  version            = "0.3.0"
   bucket_name        = "${google_storage_bucket.bucket.name}"
   bucket_prefix      = "${var.events_bucket_prefix}"
   client_secret      = "${file("${var.client_secret}")}"
@@ -39,7 +39,7 @@ module "events" {
 
 module "interactive_components" {
   source             = "amancevice/slack-interactive-components/google"
-  version            = "0.3.2"
+  version            = "0.4.0"
   bucket_name        = "${google_storage_bucket.bucket.name}"
   bucket_prefix      = "${var.interactive_components_bucket_prefix}"
   callback_ids       = ["${var.interactive_components_callback_ids}"]
@@ -53,7 +53,7 @@ module "interactive_components" {
 
 module "chapter_sms" {
   source                                          = "amancevice/slack-sms/google"
-  version                                         = "0.2.5"
+  version                                         = "0.3.0"
   aws_access_key_id                               = "${var.aws_access_key_id}"
   aws_region                                      = "${var.aws_region}"
   aws_secret_access_key                           = "${var.aws_secret_access_key}"
@@ -99,7 +99,7 @@ module "chapter_sms" {
 
 module "slack_drive" {
   source                              = "amancevice/slack-drive/google"
-  version                             = "1.0.2"
+  version                             = "1.1.0"
   auth_channels_exclude               = "${var.slack_drive_auth_channels_exclude}"
   auth_channels_include               = "${var.slack_drive_auth_channels_include}"
   auth_users_exclude                  = "${var.slack_drive_auth_users_exclude}"

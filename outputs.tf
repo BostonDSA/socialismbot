@@ -21,11 +21,6 @@ output "chapter_sms_sns_topic_subscriptions" {
   value       = "${module.chapter_sms.sns_topic_subscriptions}"
 }
 
-output "chapter_sms_slash_command_url" {
-  description = "Slack slash command Request URL."
-  value       = "${module.chapter_sms.slash_command_url}"
-}
-
 // URLs
 output "request_urls" {
   description = "Slack Request URLs."

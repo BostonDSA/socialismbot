@@ -51,7 +51,7 @@ module "interactive_components" {
 
 module "chapter_sms" {
   source                                          = "amancevice/slack-sms/google"
-  version                                         = "0.5.0"
+  version                                         = "0.5.1"
   aws_access_key_id                               = "${var.aws_access_key_id}"
   aws_region                                      = "${var.aws_region}"
   aws_secret_access_key                           = "${var.aws_secret_access_key}"

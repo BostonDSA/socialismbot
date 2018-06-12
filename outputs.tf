@@ -1,20 +1,10 @@
 // Events
-output "events_request_url" {
-  description = "Slack endpoint."
-  value       = "${module.events.request_url}"
-}
-
 output "events_pubsub_topics" {
   description = "Pub/Sub topics."
   value       = "${module.events.pubsub_topics}"
 }
 
 // Interactive Components
-output "interactive_components_request_url" {
-  description = "Slack endpoint."
-  value       = "${module.interactive_components.request_url}"
-}
-
 output "interactive_components_pubsub_topics" {
   description = "Pub/Sub topics."
   value       = "${module.interactive_components.pubsub_topics}"
@@ -34,4 +24,16 @@ output "chapter_sms_sns_topic_subscriptions" {
 output "chapter_sms_slash_command_url" {
   description = "Slack slash command Request URL."
   value       = "${module.chapter_sms.slash_command_url}"
+}
+
+// URLs
+output "request_urls" {
+  description = "Slack Request URLs."
+
+  value {
+    chapter_sms_slash_command = "${module.chapter_sms.slash_command_url}"
+    events                    = "${module.events.request_url}"
+    interactive_components    = "${module.interactive_components.request_url}"
+    slack_drive_slash_command = "${module.slack_drive.slash_command_url}"
+  }
 }

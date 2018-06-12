@@ -27,7 +27,6 @@ module "events" {
   source             = "amancevice/slack-events/google"
   version            = "0.3.0"
   bucket_name        = "${google_storage_bucket.bucket.name}"
-  bucket_prefix      = "${var.events_bucket_prefix}"
   client_secret      = "${file("${var.client_secret}")}"
   event_types        = ["${var.events_event_types}"]
   function_name      = "${var.events_function_name}"
@@ -41,7 +40,6 @@ module "interactive_components" {
   source             = "amancevice/slack-interactive-components/google"
   version            = "0.4.0"
   bucket_name        = "${google_storage_bucket.bucket.name}"
-  bucket_prefix      = "${var.interactive_components_bucket_prefix}"
   callback_ids       = ["${var.interactive_components_callback_ids}"]
   client_secret      = "${file("${var.client_secret}")}"
   function_name      = "${var.interactive_components_function_name}"
@@ -58,7 +56,6 @@ module "chapter_sms" {
   aws_region                                      = "${var.aws_region}"
   aws_secret_access_key                           = "${var.aws_secret_access_key}"
   bucket_name                                     = "${google_storage_bucket.bucket.name}"
-  bucket_prefix                                   = "${var.chapter_sms_bucket_prefix}"
   callback_id                                     = "${var.chapter_sms_callback_id}"
   dialog_element_hint                             = "${var.chapter_sms_dialog_element_hint}"
   dialog_element_label                            = "${var.chapter_sms_dialog_element_label}"
@@ -105,7 +102,6 @@ module "slack_drive" {
   auth_users_exclude                  = "${var.slack_drive_auth_users_exclude}"
   auth_users_include                  = "${var.slack_drive_auth_users_include}"
   bucket_name                         = "${google_storage_bucket.bucket.name}"
-  bucket_prefix                       = "${var.slack_drive_bucket_prefix}"
   channel                             = "${var.slack_drive_channel}"
   client_secret                       = "${file("${var.client_secret}")}"
   color                               = "${var.slack_drive_color}"

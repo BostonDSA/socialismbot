@@ -53,7 +53,7 @@ module "interactive_components" {
 
 module "chapter_sms" {
   source                                          = "amancevice/slack-sms/google"
-  version                                         = "0.2.4"
+  version                                         = "0.2.5"
   aws_access_key_id                               = "${var.aws_access_key_id}"
   aws_region                                      = "${var.aws_region}"
   aws_secret_access_key                           = "${var.aws_secret_access_key}"
@@ -64,6 +64,7 @@ module "chapter_sms" {
   dialog_element_label                            = "${var.chapter_sms_dialog_element_label}"
   dialog_element_max_length                       = "${var.chapter_sms_dialog_element_max_length}"
   dialog_title                                    = "${var.chapter_sms_dialog_title}"
+
   group_sms_default_sender_id                     = "${var.chapter_sms_group_sms_default_sender_id}"
   group_sms_default_sms_type                      = "${var.chapter_sms_group_sms_default_sms_type}"
   group_sms_delivery_status_iam_role_arn          = "${var.chapter_sms_group_sms_delivery_status_iam_role_arn}"
@@ -73,6 +74,7 @@ module "chapter_sms" {
   group_sms_topic_display_name                    = "${var.chapter_sms_group_sms_topic_display_name}"
   group_sms_topic_name                            = "${var.chapter_sms_group_sms_topic_name}"
   group_sms_usage_report_s3_bucket                = "${var.chapter_sms_group_sms_usage_report_s3_bucket}"
+
   slash_command_auth_channels_exclude             = "${var.chapter_sms_slash_command_auth_channels_exclude}"
   slash_command_auth_channels_include             = "${var.chapter_sms_slash_command_auth_channels_include}"
   slash_command_auth_channels_permission_denied   = "${var.chapter_sms_slash_command_auth_channels_permission_denied}"

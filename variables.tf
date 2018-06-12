@@ -52,7 +52,7 @@ variable "bucket_storage_class" {
 // Events
 variable "events_bucket_prefix" {
   description = "Prefix for Cloud Storage bucket."
-  default     = "events/"
+  default     = ""
 }
 
 variable "events_event_types" {
@@ -79,7 +79,7 @@ variable "events_timeout" {
 // Interactive Components
 variable "interactive_components_bucket_prefix" {
   description = "Prefix for Cloud Storage bucket."
-  default     = "interactive-components/"
+  default     = ""
 }
 
 variable "interactive_components_callback_ids" {
@@ -106,7 +106,7 @@ variable "interactive_components_timeout" {
 // Chapter SMS
 variable "chapter_sms_bucket_prefix" {
   description = "Prefix for Cloud Storage bucket."
-  default     = "chapter-sms/"
+  default     = ""
 }
 
 variable "chapter_sms_callback_id" {
@@ -307,7 +307,7 @@ variable "slack_drive_auth_users_include" {
 
 variable "slack_drive_bucket_prefix" {
   description = "Prefix for Cloud Storage bucket."
-  default     = "slack-drive/"
+  default     = ""
 }
 
 variable "slack_drive_color" {

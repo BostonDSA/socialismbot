@@ -279,3 +279,253 @@ variable "chapter_sms_sms_timeout" {
   description = "Timeout in seconds for Cloud Function."
   default     = 60
 }
+
+// Slack Drive
+variable "slack_drive_auth_channels_exclude" {
+  description = "Optional list of Slack channel IDs to blacklist."
+  type        = "list"
+  default     = []
+}
+
+variable "slack_drive_auth_channels_include" {
+  description = "Optional list of Slack channel IDs to whitelist."
+  type        = "list"
+  default     = []
+}
+
+variable "slack_drive_auth_users_exclude" {
+  description = "Optional list of Slack channel IDs to blacklist."
+  type        = "list"
+  default     = []
+}
+
+variable "slack_drive_auth_users_include" {
+  description = "Optional list of Slack channel IDs to whitelist."
+  type        = "list"
+  default     = []
+}
+
+variable "slack_drive_bucket_prefix" {
+  description = "Prefix for Cloud Storage bucket."
+  default     = ""
+}
+
+variable "slack_drive_color" {
+  description = "Default color for slackbot message attachments."
+  default     = "#b71c1c"
+}
+
+variable "slack_drive_channel" {
+  default = "Slack channel ID for logging events."
+}
+
+variable "slack_drive_slash_command" {
+  description = "Name of slash command in Slack."
+  default     = "drive"
+}
+
+// Channel Rename
+variable "slack_drive_channel_rename_description" {
+  description = "Description of the function."
+  default     = "Channel rename event handler"
+}
+
+variable "slack_drive_channel_rename_function_name" {
+  description = "Cloud Function Name."
+  default     = "slack-drive-channel-rename"
+}
+
+variable "slack_drive_channel_rename_labels" {
+  description = "A set of key/value label pairs to assign to the function."
+  type        = "map"
+
+  default {
+    app             = "slack-drive"
+    deployment-tool = "terraform"
+  }
+}
+
+variable "slack_drive_channel_rename_memory" {
+  description = "Cloud Function Memory."
+  default     = 2048
+}
+
+variable "slack_drive_channel_rename_timeout" {
+  description = "Cloud Function Timeout."
+  default     = 60
+}
+
+variable "slack_drive_channel_rename_trigger_topic" {
+  description = "Pub/Sub topic name."
+  default     = "channel_rename"
+}
+
+// Group Rename
+variable "slack_drive_group_rename_description" {
+  description = "Description of the function."
+  default     = "Group rename event handler"
+}
+
+variable "slack_drive_group_rename_function_name" {
+  description = "Cloud Function Name."
+  default     = "slack-drive-group-rename"
+}
+
+variable "slack_drive_group_rename_labels" {
+  description = "A set of key/value label pairs to assign to the function."
+  type        = "map"
+
+  default {
+    app             = "slack-drive"
+    deployment-tool = "terraform"
+  }
+}
+
+variable "slack_drive_group_rename_memory" {
+  description = "Cloud Function Memory."
+  default     = 2048
+}
+
+variable "slack_drive_group_rename_timeout" {
+  description = "Cloud Function Timeout."
+  default     = 60
+}
+
+variable "slack_drive_group_rename_trigger_topic" {
+  description = "Pub/Sub topic name."
+  default     = "group_rename"
+}
+
+// Member Joined Channel
+variable "slack_drive_member_joined_channel_description" {
+  description = "Description of the function."
+  default     = "Member joined channel event handler"
+}
+
+variable "slack_drive_member_joined_channel_function_name" {
+  description = "Cloud Function Name."
+  default     = "slack-drive-member-joined-channel"
+}
+
+variable "slack_drive_member_joined_channel_labels" {
+  description = "A set of key/value label pairs to assign to the function."
+  type        = "map"
+
+  default {
+    app             = "slack-drive"
+    deployment-tool = "terraform"
+  }
+}
+
+variable "slack_drive_member_joined_channel_memory" {
+  description = "Cloud Function Memory."
+  default     = 2048
+}
+
+variable "slack_drive_member_joined_channel_timeout" {
+  description = "Cloud Function Timeout."
+  default     = 60
+}
+
+variable "slack_drive_member_joined_channel_trigger_topic" {
+  description = "Pub/Sub topic name."
+  default     = "member_joined_channel"
+}
+
+// Member Left Channel
+variable "slack_drive_member_left_channel_description" {
+  description = "Description of the function."
+  default     = "Member left channel event handler"
+}
+
+variable "slack_drive_member_left_channel_function_name" {
+  description = "Cloud Function Name."
+  default     = "slack-drive-member-left-channel"
+}
+
+variable "slack_drive_member_left_channel_labels" {
+  description = "A set of key/value label pairs to assign to the function."
+  type        = "map"
+
+  default {
+    app             = "slack-drive"
+    deployment-tool = "terraform"
+  }
+}
+
+variable "slack_drive_member_left_channel_memory" {
+  description = "Cloud Function Memory."
+  default     = 2048
+}
+
+variable "slack_drive_member_left_channel_timeout" {
+  description = "Cloud Function Timeout."
+  default     = 60
+}
+
+variable "slack_drive_member_left_channel_trigger_topic" {
+  description = "Pub/Sub topic name."
+  default     = "member_left_channel"
+}
+
+// Redirect
+variable "slack_drive_redirect_description" {
+  description = "Description of the function."
+  default     = "Google Drive link redirection"
+}
+
+variable "slack_drive_redirect_function_name" {
+  description = "Cloud Function for redirecting to Google Drive from Slack."
+  default     = "slack-drive-redirect"
+}
+
+variable "slack_drive_redirect_labels" {
+  description = "A set of key/value label pairs to assign to the function."
+  type        = "map"
+
+  default {
+    app             = "slack-drive"
+    deployment-tool = "terraform"
+  }
+}
+
+variable "slack_drive_redirect_memory" {
+  description = "Memory for Slack redirect."
+  default     = 2048
+}
+
+variable "slack_drive_redirect_timeout" {
+  description = "Timeout in seconds for redirect."
+  default     = 60
+}
+
+// Slash Command
+variable "slack_drive_slash_command_description" {
+  description = "Description of the function."
+  default     = "Slack Drive slash command"
+}
+
+variable "slack_drive_slash_command_function_name" {
+  description = "Cloud Function for receiving slash-commands from Slack."
+  default     = "slack-drive-slash-command"
+}
+
+variable "slack_drive_slash_command_labels" {
+  description = "A set of key/value label pairs to assign to the function."
+  type        = "map"
+
+  default {
+    app             = "slack-drive"
+    deployment-tool = "terraform"
+  }
+}
+
+variable "slack_drive_slash_command_memory" {
+  description = "Memory for Slack slash command."
+  default     = 2048
+}
+
+variable "slack_drive_slash_command_timeout" {
+  description = "Timeout in seconds for Slack slash command."
+  default     = 10
+}

@@ -96,7 +96,7 @@ module "chapter_sms" {
 
 module "slack_drive" {
   source                              = "amancevice/slack-drive/google"
-  version                             = "1.2.0"
+  version                             = "1.2.2"
   auth_channels_exclude               = "${var.slack_drive_auth_channels_exclude}"
   auth_channels_include               = "${var.slack_drive_auth_channels_include}"
   auth_users_exclude                  = "${var.slack_drive_auth_users_exclude}"

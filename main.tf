@@ -12,6 +12,9 @@ provider "google" {
   version     = "~> 1.14"
 }
 
+data "google_client_config" "cloud" {
+}
+
 resource "google_storage_bucket" "bucket" {
   name          = "${var.bucket_name}"
   storage_class = "${var.bucket_storage_class}"
@@ -21,6 +24,18 @@ resource "google_storage_bucket_iam_member" "member" {
   bucket = "${google_storage_bucket.bucket.name}"
   role   = "roles/storage.objectCreator"
   member = "serviceAccount:${var.service_account}"
+}
+
+resource "google_kms_key_ring" "socialismbot" {
+  location = "global"
+  name     = "socialismbot"
+  project  = "${data.google_client_config.cloud.project}"
+}
+
+resource "google_kms_crypto_key" "socialismbot" {
+  key_ring        = "${google_kms_key_ring.socialismbot.id}"
+  name            = "socialismbot"
+  rotation_period = "7776000s"
 }
 
 module "events" {

@@ -40,7 +40,7 @@ resource "google_kms_crypto_key" "socialismbot" {
 
 module "events" {
   source             = "amancevice/slack-events/google"
-  version            = "0.5.0"
+  version            = "0.5.1"
   bucket_name        = "${google_storage_bucket.bucket.name}"
   event_types        = ["${var.events_event_types}"]
   function_name      = "${var.events_function_name}"
@@ -51,7 +51,7 @@ module "events" {
 
 module "interactive_components" {
   source             = "amancevice/slack-interactive-components/google"
-  version            = "0.6.0"
+  version            = "0.6.1"
   bucket_name        = "${google_storage_bucket.bucket.name}"
   callback_ids       = ["${var.interactive_components_callback_ids}"]
   function_name      = "${var.interactive_components_function_name}"

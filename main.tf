@@ -40,26 +40,22 @@ resource "google_kms_crypto_key" "socialismbot" {
 
 module "events" {
   source             = "amancevice/slack-events/google"
-  version            = "0.4.1"
+  version            = "0.5.0"
   bucket_name        = "${google_storage_bucket.bucket.name}"
-  client_secret      = "${file("${var.client_secret}")}"
   event_types        = ["${var.events_event_types}"]
   function_name      = "${var.events_function_name}"
   memory             = "${var.events_memory}"
-  project            = "${var.project}"
   timeout            = "${var.events_timeout}"
   verification_token = "${var.verification_token}"
 }
 
 module "interactive_components" {
   source             = "amancevice/slack-interactive-components/google"
-  version            = "0.5.1"
+  version            = "0.6.0"
   bucket_name        = "${google_storage_bucket.bucket.name}"
   callback_ids       = ["${var.interactive_components_callback_ids}"]
-  client_secret      = "${file("${var.client_secret}")}"
   function_name      = "${var.interactive_components_function_name}"
   memory             = "${var.interactive_components_memory}"
-  project            = "${var.project}"
   timeout            = "${var.interactive_components_timeout}"
   verification_token = "${var.verification_token}"
 }

@@ -1,34 +1,59 @@
-// Events
-output "events_pubsub_topics" {
-  description = "Pub/Sub topics."
-  value       = "${module.events.pubsub_topics}"
+output "api_execution_arn" {
+  description = "REST API deployment execution ARN."
+  value       = "${module.socialismbot.api_execution_arn}"
 }
 
-// Interactive Components
-output "interactive_components_pubsub_topics" {
-  description = "Pub/Sub topics."
-  value       = "${module.interactive_components.pubsub_topics}"
+output "api_invoke_url" {
+  description = "REST API deployment invocation URL."
+  value       = "${module.socialismbot.api_invoke_url}"
 }
 
-// Chapter SMS
-output "chapter_sms_sns_topic_arn" {
-  description = "AWS Topic ARN."
-  value       = "${module.chapter_sms.sns_topic_arn}"
+output "api_name" {
+  description = "REST API Name."
+  value       = "${module.socialismbot.api_name}"
 }
 
-output "chapter_sms_sns_topic_subscriptions" {
-  description = "AWS Topic ARN."
-  value       = "${module.chapter_sms.sns_topic_subscriptions}"
+output "callback_resource_ids" {
+  description = "API Gateway Resource IDs for Slack callbacks."
+  value       = "${module.socialismbot.callback_resource_ids}"
 }
 
-// URLs
-output "request_urls" {
-  description = "Slack Request URLs."
+output "callback_topic_arns" {
+  description = "SNS topics for Slack callbacks."
+  value       = ["${module.socialismbot.callback_topic_arns}"]
+}
 
-  value {
-    chapter_sms_slash_command = "${module.chapter_sms.slash_command_url}"
-    events                    = "${module.events.request_url}"
-    interactive_components    = "${module.interactive_components.request_url}"
-    slack_drive_slash_command = "${module.slack_drive.slash_command_url}"
-  }
+output "callbacks_request_url" {
+  description = "Callbacks Request URL."
+  value        = "${module.socialismbot.callbacks_request_url}"
+}
+
+output "event_resource_ids" {
+  description = "API Gateway Resource IDs for Slack events."
+  value       = "${module.socialismbot.event_resource_ids}"
+}
+
+output "event_topic_arns" {
+  description = "SNS topics for Slack events."
+  value       = ["${module.socialismbot.event_topic_arns}"]
+}
+
+output "events_request_url" {
+  description = "Events Request URL."
+  value       = "${module.socialismbot.events_request_url}"
+}
+
+output "kms_key_id" {
+  description = "KMS Key ID."
+  value       = "${module.socialismbot.kms_key_id}"
+}
+
+output "slash_commands_request_url" {
+  description = "Slash commands base URL."
+  value       = "${module.socialismbot.slash_commands_request_url}"
+}
+
+output "slash_commands_resource_id" {
+  description = "Slash Command resource ID."
+  value       = "${module.socialismbot.slash_commands_resource_id}"
 }

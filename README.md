@@ -33,14 +33,13 @@ What does it all mean?
 
 ### Provider
 
-The provider configures your connection to AWS, including the region to which your infrastructure will be applied.
+The provider configures your connection to AWS, including the region to which your infrastructure will be applied. We use variables to hide the sensitive information from being made public.
 
 ```terraform
 provider "aws" {
   access_key = "${var.aws_access_key_id}"
   secret_key = "${var.aws_secret_access_key}"
   region     = "${var.aws_region}"
-  version    = "~> 1.24"
 }
 ```
 
@@ -48,7 +47,7 @@ provider "aws" {
 
 The actual code is deployed as a terraform module. The module is quite configurable, but a very basic setup will do the trick.
 
-It's important your verification token is kept secret so if you do not set `auto_encrypt_token = false` the module will encrypt it for you. Once it's encrypted you may replace the raw token with the encrypted one and set `auto_encrypt_token = false`.
+It's important your verification token is kept secret, so the module will encrypt it for you unless you specifically tell it not to. Once it's encrypted you may replace the raw token with the encrypted one and set `auto_encrypt_token = false`.
 
 ```terraform
 module "socialismbot" {

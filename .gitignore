@@ -8,5 +8,5 @@
 # .tfvars files
 *.tfvars
 
-# app
+# backend
 **/backend.tf

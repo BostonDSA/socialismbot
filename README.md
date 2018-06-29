@@ -47,8 +47,6 @@ provider "aws" {
 
 The actual code is deployed as a terraform module. The module is quite configurable, but a very basic setup will do the trick.
 
-It's important your verification token is kept secret, so the module will encrypt it for you unless you specifically tell it not to. Once it's encrypted you may replace the raw token with the encrypted one and set `auto_encrypt_token = false`.
-
 ```terraform
 module "socialismbot" {
   source                   = "amancevice/slackbot/aws"
@@ -65,6 +63,8 @@ module "socialismbot" {
   ]
 }
 ```
+
+It's important your verification token is kept secret, so the module will encrypt it for you unless you specifically tell it not to. Once it's encrypted you may replace the raw token with the encrypted one and set `auto_encrypt_token = false`.
 
 This will create an API with the following endpoints to be configured in Slack:
 

@@ -79,6 +79,21 @@ An SNS topic is automatically created for every callback and event. Both the eve
 
 For example, if Slack sends a `channel_rename` event, the event will be published to the `slack_event_channel_rename` topic. How the event is handled from there is left to the user to decide.
 
+### Slackbot SNS Messenger
+
+To easily send a message to the Slack workspace the `slackbot_sns` was added. Payloads sent to the `slackbot-sns` topic are routed to Slack as a message from `@socialismbot`.
+
+```terraform
+module "slackbot_sns" {
+  source              = "amancevice/slackbot-sns/aws"
+  kms_key_id          = "${module.socialismbot.kms_key_id}"
+  slack_web_api_token = "<web-api-token>"
+  # auto_encrypt_token  = false
+}
+```
+
+As above, it's important your Web API token is kept secret, so the module will encrypt it for you unless you specifically tell it not to. Once it's encrypted you may replace the raw token with the encrypted one and set `auto_encrypt_token = false`.
+
 ### Backend
 
 Terraform has the option to store the state of your project remotely. This is useful when you want to share outputs from one project with another.

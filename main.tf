@@ -25,3 +25,11 @@ module "socialismbot" {
     "test_event"
   ]
 }
+
+module "slackbot_sns" {
+  source              = "amancevice/slackbot-sns/aws"
+  version             = "1.1.3"
+  auto_encrypt_token  = false
+  kms_key_id          = "${module.socialismbot.kms_key_id}"
+  slack_web_api_token = "AQICAHjBa19e4R5qIz6Kx+CVTCK0X24YvSvQn/280b8MKuUc5gE1ik2jD1rXvejRV4dtQqTKAAAAiTCBhgYJKoZIhvcNAQcGoHkwdwIBADByBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDB1sJQaVHpJ9MU3OYAIBEIBFhqpro+Y0ejoAE8R1rov6jnextDLS5PoENDkx0dAecx/X4+ZHMpaKjh3hPG5nDhWeXT9QxZ0ge0Vi7weAMMZ0Wl9W3qXd"
+}

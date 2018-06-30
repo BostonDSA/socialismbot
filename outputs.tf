@@ -48,6 +48,11 @@ output "kms_key_id" {
   value       = "${module.socialismbot.kms_key_id}"
 }
 
+output "slackbot_sns_topic_arn" {
+  description = "SNS Topic ARN for publishing messages to Slack."
+  value       = "${module.slackbot_sns.topic_arn}"
+}
+
 output "slash_commands_request_url" {
   description = "Slash commands base URL."
   value       = "${module.socialismbot.slash_commands_request_url}"

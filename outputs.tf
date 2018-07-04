@@ -28,6 +28,12 @@ output "callbacks_request_url" {
   value        = "${module.socialismbot.callbacks_request_url}"
 }
 
+output "decrypt_policy_arn" {
+  description = "Slackbot KMS key decryption permission policy ARN."
+  value       = "${module.socialismbot.decrypt_policy_arn}"
+}
+
+
 output "event_resource_ids" {
   description = "API Gateway Resource IDs for Slack events."
   value       = "${module.socialismbot.event_resource_ids}"

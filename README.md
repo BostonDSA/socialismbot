@@ -2,6 +2,18 @@
 
 Terraform configuration for a Socialist Slackbot's back end.
 
+## Architecture
+
+The archetecture for the Slackbot API is fairly straightforward. For both events and callbacks, payloads are routed to SNS. For events, they are routed by `event_type`, and for callbacks, `callback_id`.
+
+### Callbacks
+
+<img src="./docs/images/callbacks.png"></img>
+
+### Events
+
+<img src="./docs/images/events.png"></img>
+
 ## Quickstart
 
 Fork & clone this repository, then create a file called `terraform.tfvars`. Use the following as a template:

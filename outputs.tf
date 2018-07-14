@@ -33,7 +33,6 @@ output "secrets_policy_arn" {
   value       = "${module.socialismbot.secrets_policy_arn}"
 }
 
-
 output "event_resource_ids" {
   description = "API Gateway Resource IDs for Slack events."
   value       = "${module.socialismbot.event_resource_ids}"
@@ -52,6 +51,11 @@ output "events_request_url" {
 output "kms_key_id" {
   description = "KMS Key ID."
   value       = "${module.socialismbot.kms_key_id}"
+}
+
+output "secret" {
+  description = "Slackbot SecretsManager secret name."
+  value       = "${module.socialismbot.secret}"
 }
 
 output "slackbot_sns_messenger_topic_arn" {

@@ -33,7 +33,7 @@ module "socialismbot" {
 
 module "socialismbot_remove_thread" {
   source       = "amancevice/slackbot-remove-thread/aws"
-  version      = "0.0.3"
+  version      = "0.0.4"
   api_name     = "${module.socialismbot.api_name}"
   mod_channel  = "G7FAX48KX"
   dialog_topic = "remove_thread_dialog"

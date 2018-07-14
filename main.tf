@@ -16,9 +16,9 @@ module "socialismbot" {
   callback_ids = [
     "blast",
     "remove_thread",
-    "remove_thread_reason",
-    "report",
-    "report_reason",
+    "remove_thread_dialog",
+    "report_message",
+    "report_message_dialog",
     "test"
   ]
 
@@ -33,30 +33,13 @@ module "socialismbot" {
 
 module "socialismbot_remove_thread" {
   source       = "amancevice/slackbot-remove-thread/aws"
-  version      = "0.0.1"
+  version      = "0.0.3"
   api_name     = "${module.socialismbot.api_name}"
-  mod_channel  = "GB1SLKKL7"
-  reason_topic = "remove_thread_reason"
+  mod_channel  = "G7FAX48KX"
+  dialog_topic = "remove_thread_dialog"
   remove_topic = "remove_thread"
   role_arn     = "${module.socialismbot.slackbot_role_arn}"
   secret       = "${module.socialismbot.secret}"
-
-  auth_users_include = [
-    "U7F6AMSFL",
-    "U7FG9AP8Q",
-    "U7GC0RMEH",
-    "U7LE1G9EX",
-    "U7MUC3CE6",
-    "U7MUZ9EKD",
-    "U7N37CP0D",
-    "U7N57456Z",
-    "U7NUADGA2",
-    "U7P0HENS2",
-    "U7P1MU20P",
-    "U7TDFV8G1",
-    "U8V2PHRQW",
-    "UAJGYQCQ1"
-  ]
 }
 
 module "socialismbot_sns_messenger" {

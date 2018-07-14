@@ -28,9 +28,9 @@ output "callbacks_request_url" {
   value        = "${module.socialismbot.callbacks_request_url}"
 }
 
-output "decrypt_policy_arn" {
+output "secrets_policy_arn" {
   description = "Slackbot KMS key decryption permission policy ARN."
-  value       = "${module.socialismbot.decrypt_policy_arn}"
+  value       = "${module.socialismbot.secrets_policy_arn}"
 }
 
 
@@ -54,9 +54,9 @@ output "kms_key_id" {
   value       = "${module.socialismbot.kms_key_id}"
 }
 
-output "slackbot_sns_topic_arn" {
+output "slackbot_sns_messenger_topic_arn" {
   description = "SNS Topic ARN for publishing messages to Slack."
-  value       = "${module.slackbot_sns.topic_arn}"
+  value       = "${module.slackbot_sns_messenger.topic_arn}"
 }
 
 output "slash_commands_request_url" {

@@ -2,7 +2,7 @@ provider "aws" {
   access_key = "${var.aws_access_key_id}"
   secret_key = "${var.aws_secret_access_key}"
   region     = "${var.aws_region}"
-  version    = "~> 1.24"
+  version    = "~> 1.27"
 }
 
 module "socialismbot" {
@@ -31,7 +31,22 @@ module "socialismbot" {
   ]
 }
 
-module "slackbot_sns_messenger" {
+module "socialismbot_remove_thread" {
+  source       = "amancevice/slackbot-remove-thread/aws"
+  version      = "0.0.1"
+  api_name     = "${module.socialismbot.api_name}"
+  mod_channel  = "GB1SLKKL7"
+  reason_topic = "remove_thread_reason"
+  remove_topic = "remove_thread"
+  role_arn     = "${module.socialismbot.slackbot_role_arn}"
+  secret       = "${module.socialismbot.secret}"
+
+  auth_users_include = [
+    "U7P1MU20P"
+  ]
+}
+
+module "socialismbot_sns_messenger" {
   source   = "amancevice/slackbot-sns-messenger/aws"
   version  = "2.1.2"
   api_name = "${module.socialismbot.api_name}"

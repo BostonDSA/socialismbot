@@ -60,7 +60,7 @@ output "secret" {
 
 output "slackbot_sns_messenger_topic_arn" {
   description = "SNS Topic ARN for publishing messages to Slack."
-  value       = "${module.slackbot_sns_messenger.topic_arn}"
+  value       = "${module.socialismbot_sns_messenger.topic_arn}"
 }
 
 output "slash_commands_request_url" {

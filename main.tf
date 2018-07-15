@@ -44,7 +44,7 @@ module "socialismbot_mod" {
 
 module "socialismbot_sns_messenger" {
   source   = "amancevice/slackbot-sns-messenger/aws"
-  version  = "2.1.2"
+  version  = "2.2.0"
   api_name = "${module.socialismbot.api_name}"
   role_arn = "${module.socialismbot.slackbot_role_arn}"
   secret   = "${module.socialismbot.secret}"

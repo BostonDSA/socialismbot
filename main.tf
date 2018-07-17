@@ -6,20 +6,12 @@ provider "aws" {
 }
 
 module "socialismbot" {
-  source                 = "amancevice/slackbot/aws"
-  version                = "1.1.2"
-  api_name               = "socialismbot"
-  slack_access_token     = "${var.slack_access_token}"
-  slack_bot_access_token = "${var.slack_bot_access_token}"
-  slack_signing_secret   = "${var.slack_signing_secret}"
-
-  callback_ids = [
-    "blast",
-    "remove_message",
-    "report_message_dialog",
-    "report_message_post",
-    "test"
-  ]
+  source                  = "amancevice/slackbot/aws"
+  version                 = "1.2.0"
+  api_name                = "socialismbot"
+  slack_user_access_token = "${var.slack_user_access_token}"
+  slack_bot_access_token  = "${var.slack_bot_access_token}"
+  slack_signing_secret    = "${var.slack_signing_secret}"
 
   event_types = [
     "channel_rename",

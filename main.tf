@@ -24,13 +24,10 @@ module "socialismbot" {
 
 module "socialismbot_mod" {
   source             = "amancevice/slackbot-mod/aws"
-  version            = "0.0.4"
+  version            = "0.1.2"
   api_name           = "${module.socialismbot.api_name}"
-  dialog_topic       = "report_message_dialog"
   moderation_channel = "G7FAX48KX"
   # moderation_channel = "GB1SLKKL7"
-  remove_topic       = "remove_message"
-  report_topic       = "report_message_post"
   role_arn           = "${module.socialismbot.slackbot_role_arn}"
   secret             = "${module.socialismbot.secret}"
 }

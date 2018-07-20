@@ -58,6 +58,11 @@ output "secret" {
   value       = "${module.socialismbot.secret}"
 }
 
+output "slackbot_role_arn" {
+  description = "ARN of basic execution role for Slackbot lambdas."
+  value       = "${module.socialismbot.slackbot_role_arn}"
+}
+
 output "slackbot_sns_messenger_topic_arn" {
   description = "SNS Topic ARN for publishing messages to Slack."
   value       = "${module.socialismbot_sns_messenger.topic_arn}"
@@ -71,4 +76,9 @@ output "slash_commands_request_url" {
 output "slash_commands_resource_id" {
   description = "Slash Command resource ID."
   value       = "${module.socialismbot.slash_commands_resource_id}"
+}
+
+output "mod_topic_arns" {
+  description = "Moderator SNS Topic ARNs."
+  value       = ["${module.socialismbot_mod.topic_arns}"]
 }

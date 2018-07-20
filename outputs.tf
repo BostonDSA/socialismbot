@@ -58,9 +58,9 @@ output "secret" {
   value       = "${module.socialismbot.secret}"
 }
 
-output "slackbot_role_arn" {
-  description = "ARN of basic execution role for Slackbot lambdas."
-  value       = "${module.socialismbot.slackbot_role_arn}"
+output "slackbot_role" {
+  description = "Role for Slackbot lambdas."
+  value       = "${module.socialismbot.slackbot_role}"
 }
 
 output "slackbot_sns_messenger_topic_arn" {

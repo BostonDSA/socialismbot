@@ -36,10 +36,10 @@ module "socialismbot_mod" {
   secret             = "${module.socialismbot.secret}"
 }
 
-module "socialismbot_sns_messenger" {
+module "messenger" {
   source   = "amancevice/slackbot-sns-messenger/aws"
-  version  = "3.2.0"
+  version  = "4.0.0"
   api_name = "${module.socialismbot.api_name}"
-  role     = "${module.socialismbot.slackbot_role}"
+  role     = "${module.socialismbot.role}"
   secret   = "${module.socialismbot.secret}"
 }

@@ -53,19 +53,19 @@ output "kms_key_id" {
   value       = "${module.socialismbot.kms_key_id}"
 }
 
+output "role" {
+  description = "Role for Slackbot lambdas."
+  value       = "${module.socialismbot.role}"
+}
+
 output "secret" {
   description = "Slackbot SecretsManager secret name."
   value       = "${module.socialismbot.secret}"
 }
 
-output "slackbot_role" {
-  description = "Role for Slackbot lambdas."
-  value       = "${module.socialismbot.slackbot_role}"
-}
-
 output "slackbot_sns_messenger_topic_arn" {
   description = "SNS Topic ARN for publishing messages to Slack."
-  value       = "${module.socialismbot_sns_messenger.topic_arn}"
+  value       = "${module.messenger.topic_arn}"
 }
 
 output "slash_commands_request_url" {
@@ -80,5 +80,5 @@ output "slash_commands_resource_id" {
 
 output "mod_topic_arns" {
   description = "Moderator SNS Topic ARNs."
-  value       = ["${module.socialismbot_mod.topic_arns}"]
+  value       = ["${module.moderator.topic_arns}"]
 }

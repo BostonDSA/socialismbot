@@ -13,11 +13,10 @@ locals {
 
 module "socialismbot" {
   source                  = "amancevice/slackbot/aws"
-  version                 = "1.3.3"
+  version                 = "2.0.1"
   api_name                = "socialismbot"
-  slack_user_access_token = "${var.slack_user_access_token}"
-  slack_bot_access_token  = "${var.slack_bot_access_token}"
   slack_signing_secret    = "${var.slack_signing_secret}"
+  slack_workspace_token   = "${var.slack_workspace_token}"
 
   event_types = [
     "channel_rename",

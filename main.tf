@@ -29,13 +29,13 @@ module "socialismbot" {
   ]
 }
 
-module "socialismbot_mod" {
-  source             = "amancevice/slackbot-mod/aws"
-  version            = "0.1.2"
-  api_name           = "${module.socialismbot.api_name}"
-  moderation_channel = "${local.team_mods}"
-  role_arn           = "${module.socialismbot.slackbot_role_arn}"
-  secret             = "${module.socialismbot.secret}"
+module "moderator" {
+  source            = "amancevice/slackbot-mod/aws"
+  version           = "0.2.0"
+  api_name          = "${module.socialismbot.api_name}"
+  moderator_channel = "${local.team_mods}"
+  role              = "${module.socialismbot.role}"
+  secret            = "${module.socialismbot.secret}"
 }
 
 module "messenger" {

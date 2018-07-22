@@ -13,8 +13,10 @@ locals {
 
 module "socialismbot" {
   source                  = "amancevice/slackbot/aws"
-  version                 = "2.0.1"
+  version                 = "2.1.0"
   api_name                = "socialismbot"
+  slack_client_id         = "${var.slack_client_id}"
+  slack_client_secret     = "${var.slack_client_secret}"
   slack_signing_secret    = "${var.slack_signing_secret}"
   slack_workspace_token   = "${var.slack_workspace_token}"
 

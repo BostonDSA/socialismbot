@@ -11,3 +11,7 @@
 # backend
 **/backend.tf
 .env
+
+# node
+node_modules/
+package*.json

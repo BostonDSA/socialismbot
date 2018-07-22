@@ -10,6 +10,14 @@ variable "aws_region" {
   description = "AWS Region."
 }
 
+variable "slack_client_id" {
+  description = "Slack Client ID."
+}
+
+variable "slack_client_secret" {
+  description = "Slack Client Secret."
+}
+
 variable "slack_signing_secret" {
   description = "Slack signing secret."
 }

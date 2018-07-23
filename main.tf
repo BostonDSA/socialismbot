@@ -25,7 +25,7 @@ module "socialismbot" {
 
 module "moderator" {
   source            = "amancevice/slackbot-mod/aws"
-  version           = "0.2.0"
+  version           = "0.3.0"
   api_name          = "${module.socialismbot.api_name}"
   moderator_channel = "${local.team_mods}"
   role              = "${module.socialismbot.role}"

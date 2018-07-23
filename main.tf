@@ -15,18 +15,12 @@ module "socialismbot" {
   source                  = "amancevice/slackbot/aws"
   version                 = "2.1.1"
   api_name                = "socialismbot"
+  slack_bot_access_token  = "${var.slack_bot_access_token}"
   slack_client_id         = "${var.slack_client_id}"
   slack_client_secret     = "${var.slack_client_secret}"
   slack_signing_secret    = "${var.slack_signing_secret}"
   slack_workspace_token   = "${var.slack_workspace_token}"
-
-  event_types = [
-    "channel_rename",
-    "group_rename",
-    "member_joined_channel",
-    "member_left_channel",
-    "test"
-  ]
+  slack_user_access_token = "${var.slack_user_access_token}"
 }
 
 module "moderator" {

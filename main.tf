@@ -34,7 +34,7 @@ module "moderator" {
 
 module "messenger" {
   source   = "amancevice/slackbot-sns-messenger/aws"
-  version  = "4.0.0"
+  version  = "5.0.0"
   api_name = "${module.socialismbot.api_name}"
   role     = "${module.socialismbot.role}"
   secret   = "${module.socialismbot.secret}"

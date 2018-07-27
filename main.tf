@@ -2,7 +2,7 @@ provider "aws" {
   access_key = "${var.aws_access_key_id}"
   secret_key = "${var.aws_secret_access_key}"
   region     = "${var.aws_region}"
-  version    = "~> 1.28"
+  version    = "~> 1.29"
 }
 
 locals {
@@ -13,7 +13,7 @@ locals {
 
 module "socialismbot" {
   source                  = "amancevice/slackbot/aws"
-  version                 = "2.1.1"
+  version                 = "4.0.0"
   api_name                = "socialismbot"
   slack_bot_access_token  = "${var.slack_bot_access_token}"
   slack_client_id         = "${var.slack_client_id}"

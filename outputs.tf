@@ -53,6 +53,11 @@ output "kms_key_id" {
   value       = "${module.socialismbot.kms_key_id}"
 }
 
+output "oauth_request_url" {
+  description = "OAuth Request URL."
+  value       = "${module.socialismbot.oauth_request_url}"
+}
+
 output "role" {
   description = "Role for Slackbot lambdas."
   value       = "${module.socialismbot.role}"

@@ -13,39 +13,9 @@ output "api_name" {
   value       = "${module.socialismbot.api_name}"
 }
 
-output "callback_resource_ids" {
-  description = "API Gateway Resource IDs for Slack callbacks."
-  value       = "${module.socialismbot.callback_resource_ids}"
-}
-
-output "callback_topic_arns" {
-  description = "SNS topics for Slack callbacks."
-  value       = ["${module.socialismbot.callback_topic_arns}"]
-}
-
-output "callbacks_request_url" {
-  description = "Callbacks Request URL."
-  value        = "${module.socialismbot.callbacks_request_url}"
-}
-
-output "secrets_policy_arn" {
-  description = "Slackbot KMS key decryption permission policy ARN."
-  value       = "${module.socialismbot.secrets_policy_arn}"
-}
-
-output "event_resource_ids" {
-  description = "API Gateway Resource IDs for Slack events."
-  value       = "${module.socialismbot.event_resource_ids}"
-}
-
-output "event_topic_arns" {
-  description = "SNS topics for Slack events."
-  value       = ["${module.socialismbot.event_topic_arns}"]
-}
-
-output "events_request_url" {
-  description = "Events Request URL."
-  value       = "${module.socialismbot.events_request_url}"
+output "api_proxy_resource_id" {
+  description = "API Gateway proxy resource ID."
+  value       = "${module.socialismbot.api_proxy_resource_id}"
 }
 
 output "kms_key_id" {
@@ -53,37 +23,37 @@ output "kms_key_id" {
   value       = "${module.socialismbot.kms_key_id}"
 }
 
-output "oauth_request_url" {
-  description = "OAuth Request URL."
-  value       = "${module.socialismbot.oauth_request_url}"
-}
-
-output "role" {
-  description = "Role for Slackbot lambdas."
-  value       = "${module.socialismbot.role}"
-}
-
-output "secret" {
-  description = "Slackbot SecretsManager secret name."
-  value       = "${module.socialismbot.secret}"
-}
-
-output "slackbot_sns_messenger_topic_arn" {
-  description = "SNS Topic ARN for publishing messages to Slack."
-  value       = "${module.messenger.topic_arn}"
-}
-
-output "slash_commands_request_url" {
-  description = "Slash commands base URL."
-  value       = "${module.socialismbot.slash_commands_request_url}"
-}
-
-output "slash_commands_resource_id" {
-  description = "Slash Command resource ID."
-  value       = "${module.socialismbot.slash_commands_resource_id}"
+output "lambda" {
+  description = "API Lambda name."
+  value       = "${module.socialismbot.lambda}"
 }
 
 output "mod_topic_arns" {
   description = "Moderator SNS Topic ARNs."
   value       = ["${module.moderator.topic_arns}"]
+}
+
+output "request_urls" {
+  description = "Callbacks Request URL."
+  value        = "${module.socialismbot.request_urls}"
+}
+
+output "role_name" {
+  description = "Role for Slackbot lambdas."
+  value       = "${module.socialismbot.role}"
+}
+
+output "secret_name" {
+  description = "Slackbot SecretsManager secret name."
+  value       = "${module.socialismbot.secret}"
+}
+
+output "secrets_policy_arn" {
+  description = "Slackbot KMS key decryption permission policy ARN."
+  value       = "${module.socialismbot.secrets_policy_arn}"
+}
+
+output "slackbot_sns_messenger_topic_arn" {
+  description = "SNS Topic ARN for publishing messages to Slack."
+  value       = "${module.messenger.topic_arn}"
 }

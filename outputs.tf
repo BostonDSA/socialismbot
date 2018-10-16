@@ -28,9 +28,9 @@ output "socialismbot_kms_key_id" {
   value       = "${module.socialismbot.kms_key_id}"
 }
 
-output "socialismbot_lambda" {
+output "socialismbot_lambda_name" {
   description = "API Lambda name."
-  value       = "${module.socialismbot.lambda}"
+  value       = "${module.socialismbot.lambda_name}"
 }
 
 output "socialismbot_request_urls" {
@@ -38,14 +38,14 @@ output "socialismbot_request_urls" {
   value        = "${module.socialismbot.request_urls}"
 }
 
-output "socialismbot_role" {
+output "socialismbot_role_name" {
   description = "Role for Slackbot lambdas."
-  value       = "${module.socialismbot.role}"
+  value       = "${module.socialismbot.role_name}"
 }
 
-output "socialismbot_secret" {
+output "socialismbot_secret_name" {
   description = "Slackbot SecretsManager secret name."
-  value       = "${module.socialismbot.secret}"
+  value       = "${module.socialismbot.secret_name}"
 }
 
 output "socialismbot_secrets_policy_arn" {

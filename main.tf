@@ -13,13 +13,12 @@ locals {
 
 module "socialismbot" {
   source                  = "amancevice/slackbot/aws"
-  version                 = "5.2.0"
+  version                 = "6.0.1"
   api_name                = "socialismbot"
   slack_bot_access_token  = "${var.slack_bot_access_token}"
   slack_client_id         = "${var.slack_client_id}"
   slack_client_secret     = "${var.slack_client_secret}"
   slack_signing_secret    = "${var.slack_signing_secret}"
-  slack_workspace_token   = "${var.slack_workspace_token}"
   slack_user_access_token = "${var.slack_user_access_token}"
 }
 
@@ -36,6 +35,6 @@ module "messenger" {
   source   = "amancevice/slackbot-sns-messenger/aws"
   version  = "5.0.0"
   api_name = "${module.socialismbot.api_name}"
-  role     = "${module.socialismbot.role}"
-  secret   = "${module.socialismbot.secret}"
+  role     = "${module.socialismbot.role_name}"
+  secret   = "${module.socialismbot.secret_name}"
 }

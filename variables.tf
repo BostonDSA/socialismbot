@@ -26,10 +26,6 @@ variable "slack_signing_secret" {
   description = "Slack signing secret."
 }
 
-variable "slack_workspace_token" {
-  description = "Slack workspace token."
-}
-
 variable "slack_user_access_token" {
   description = "Slack OAuth user access token."
 }

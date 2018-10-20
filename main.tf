@@ -1,8 +1,8 @@
-provider "aws" {
+provider aws {
   access_key = "${var.aws_access_key_id}"
   secret_key = "${var.aws_secret_access_key}"
   region     = "${var.aws_region}"
-  version    = "~> 1.29"
+  version    = "~> 1.41"
 }
 
 locals {
@@ -11,7 +11,7 @@ locals {
   testing   = "GB1SLKKL7"
 }
 
-module "socialismbot" {
+module socialismbot {
   source                  = "amancevice/slackbot/aws"
   version                 = "6.2.2"
   api_name                = "socialismbot"
@@ -22,7 +22,7 @@ module "socialismbot" {
   slack_user_access_token = "${var.slack_user_access_token}"
 }
 
-module "moderator" {
+module moderator {
   source            = "amancevice/slackbot-mod/aws"
   version           = "0.4.0"
   api_name          = "${module.socialismbot.api_name}"
@@ -31,10 +31,10 @@ module "moderator" {
   secret            = "${module.socialismbot.secret_name}"
 }
 
-module "messenger" {
-  source   = "amancevice/slackbot-sns-messenger/aws"
-  version  = "5.0.0"
-  api_name = "${module.socialismbot.api_name}"
-  role     = "${module.socialismbot.role_name}"
-  secret   = "${module.socialismbot.secret_name}"
+module messenger {
+  source      = "amancevice/slackbot-sns-messenger/aws"
+  version     = "6.0.0"
+  api_name    = "${module.socialismbot.api_name}"
+  role_name   = "${module.socialismbot.role_name}"
+  secret_name = "${module.socialismbot.secret_name}"
 }

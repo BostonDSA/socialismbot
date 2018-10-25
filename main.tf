@@ -14,8 +14,9 @@ locals {
 
 module socialismbot {
   source                  = "amancevice/slackbot/aws"
-  version                 = "6.2.2"
+  version                 = "6.3.0"
   api_name                = "socialismbot"
+  base_url                = "/slack"
   slack_bot_access_token  = "${var.slack_bot_access_token}"
   slack_client_id         = "${var.slack_client_id}"
   slack_client_secret     = "${var.slack_client_secret}"

@@ -8,11 +8,6 @@ output socialismbot_api_execution_arn {
   value       = "${module.socialismbot.api_execution_arn}"
 }
 
-output socialismbot_api_invoke_url {
-  description = "REST API deployment invocation URL."
-  value       = "${module.socialismbot.api_invoke_url}"
-}
-
 output socialismbot_api_name {
   description = "REST API Name."
   value       = "${module.socialismbot.api_name}"
@@ -31,11 +26,6 @@ output socialismbot_kms_key_id {
 output socialismbot_lambda_name {
   description = "API Lambda name."
   value       = "${module.socialismbot.lambda_name}"
-}
-
-output socialismbot_request_urls {
-  description = "Callbacks Request URL."
-  value        = "${module.socialismbot.request_urls}"
 }
 
 output socialismbot_role_name {

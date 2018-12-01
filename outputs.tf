@@ -18,6 +18,11 @@ output socialismbot_api_proxy_resource_id {
   value       = "${module.socialismbot.api_proxy_resource_id}"
 }
 
+output socialismbot_kms_key_arn {
+  description = "KMS Key ARN."
+  value       = "${module.socialismbot.kms_key_arn}"
+}
+
 output socialismbot_kms_key_id {
   description = "KMS Key ID."
   value       = "${module.socialismbot.kms_key_id}"

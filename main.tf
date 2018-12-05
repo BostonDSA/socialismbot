@@ -14,7 +14,7 @@ locals {
 
 module socialismbot {
   source                  = "amancevice/slackbot/aws"
-  version                 = "7.0.0"
+  version                 = "8.0.0"
   api_name                = "socialismbot"
   base_url                = "/slack"
   slack_bot_access_token  = "${var.slack_bot_access_token}"
@@ -26,7 +26,7 @@ module socialismbot {
 
 module messenger {
   source      = "amancevice/slackbot-sns-messenger/aws"
-  version     = "7.2.0"
+  version     = "8.0.0"
   api_name    = "${module.socialismbot.api_name}"
   kms_key_arn = "${module.socialismbot.kms_key_arn}"
   role_name   = "${module.socialismbot.role_name}"

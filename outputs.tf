@@ -52,3 +52,8 @@ output messenger_topic_arn {
   description = "SNS Topic ARN for publishing messages to Slack."
   value       = "${module.messenger.topic_arn}"
 }
+
+output slash_events_topic_arn {
+  description = "Post events SNS topic ARN."
+  value       = "${module.slash_events.topic_arn}"
+}

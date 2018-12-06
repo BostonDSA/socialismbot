@@ -18,6 +18,10 @@ variable aws_region {
   default     = "us-east-1"
 }
 
+variable google_calendar_id {
+  description = "Google Calendar ID."
+}
+
 variable slack_bot_access_token {
   description = "Slack OAuth bot access token."
 }

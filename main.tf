@@ -45,7 +45,7 @@ resource aws_iam_policy google {
 
 module socialismbot {
   source                  = "amancevice/slackbot/aws"
-  version                 = "8.1.0"
+  version                 = "8.2.0"
   api_name                = "socialismbot"
   base_url                = "/slack"
   role_policy_attachments = ["${aws_iam_policy.google.arn}"]
@@ -67,7 +67,7 @@ module messenger {
 
 module moderator {
   source            = "amancevice/slackbot-mod/aws"
-  version           = "0.4.0"
+  version           = "0.6.1"
   api_name          = "${module.socialismbot.api_name}"
   moderator_channel = "${local.testing}"
   role              = "${module.socialismbot.role_name}"

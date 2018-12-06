@@ -203,7 +203,7 @@ function getSubscriptions(options) {
     title: 'Subscribe to this Calendar!',
     fallback: 'Subscribe to this Calendar!',
     footer: '<https://github.com/BostonDSA/socialismbot|BostonDSA/socialismbot>',
-    footer_icon: 'https://www.google.com/s2/favicons?domain=www.github.com',
+    footer_icon: 'https://assets-cdn.github.com/favicon.ico',
     mrkdwn_in: ['text'],
     text: `Choose _\u2039\u2039 Google \u203a\u203a_ if you already use Google Calendar\nChoose _\u2039\u2039 iCalendar \u203a\u203a_ if you use something else\n_Subscribing via the \u2039\u2039 Google \u203a\u203a button will only work from a computer!_`,
     actions: [

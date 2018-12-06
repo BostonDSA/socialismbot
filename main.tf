@@ -69,7 +69,7 @@ module moderator {
   source            = "amancevice/slackbot-mod/aws"
   version           = "0.6.1"
   api_name          = "${module.socialismbot.api_name}"
-  moderator_channel = "${local.testing}"
+  moderator_channel = "${local.team_mods}"
   role              = "${module.socialismbot.role_name}"
   secret            = "${module.socialismbot.secret_name}"
 }

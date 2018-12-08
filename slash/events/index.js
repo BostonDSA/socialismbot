@@ -240,7 +240,7 @@ function publishMessage(message) {
   const SNS = new AWS.SNS();
   return new Promise((resolve, reject) => {
     SNS.publish({
-      Message: JSON.stringify({payload: message}),
+      Message: JSON.stringify(message),
       TopicArn: topic
     }, (err, data) => {
       if (err) {

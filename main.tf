@@ -45,7 +45,7 @@ resource aws_iam_policy google {
 
 module socialismbot {
   source                  = "amancevice/slackbot/aws"
-  version                 = "8.2.0"
+  version                 = "8.3.0"
   api_name                = "socialismbot"
   base_url                = "/slack"
   role_policy_attachments = ["${aws_iam_policy.google.arn}"]
@@ -54,15 +54,6 @@ module socialismbot {
   slack_client_secret     = "${var.slack_client_secret}"
   slack_signing_secret    = "${var.slack_signing_secret}"
   slack_user_access_token = "${var.slack_user_access_token}"
-}
-
-module messenger {
-  source      = "amancevice/slackbot-sns-messenger/aws"
-  version     = "8.0.0"
-  api_name    = "${module.socialismbot.api_name}"
-  kms_key_arn = "${module.socialismbot.kms_key_arn}"
-  role_name   = "${module.socialismbot.role_name}"
-  secret_name = "${module.socialismbot.secret_name}"
 }
 
 module moderator {
@@ -81,5 +72,5 @@ module slash_events {
   kms_key_arn        = "${module.socialismbot.kms_key_arn}"
   role_name          = "${module.socialismbot.role_name}"
   secret_name        = "${module.socialismbot.secret_name}"
-  topic_arn          = "${module.messenger.topic_arn}"
+  topic_arn          = "${module.socialismbot.post_message_topic_arn}"
 }

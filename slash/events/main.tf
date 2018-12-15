@@ -79,7 +79,7 @@ resource aws_cloudwatch_log_group logs {
 resource aws_lambda_function lambda {
   description      = "Publish Google Calendar events to Slack"
   filename         = "${path.module}/package.zip"
-  function_name    = "slack-${var.api_name}-post-events"
+  function_name    = "slack-${var.api_name}-slash-events-post"
   handler          = "index.handler"
   memory_size      = 1024
   role             = "${data.aws_iam_role.role.arn}"

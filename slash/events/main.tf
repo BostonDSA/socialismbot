@@ -1,10 +1,7 @@
 locals {
   callback_id = "events_post"
-  rule_arn    = "${aws_cloudwatch_event_rule.noon_edt.arn}"
-  rule_name   = "${aws_cloudwatch_event_rule.noon_edt.name}"
-
-  events  = "C7F7Z0WJG"
-  testing = "GB1SLKKL7"
+  events      = "C7F7Z0WJG"
+  testing     = "GB1SLKKL7"
 
   payload {
     submission {
@@ -53,20 +50,14 @@ module events {
   }
 }
 
-resource aws_cloudwatch_event_rule noon_edt {
-  description         = "Every day at 12pm Eastern Daylight Time"
-  name                = "every-day-at-12pm-edt"
+resource aws_cloudwatch_event_rule rule {
+  description         = "Post daily events to Slack"
+  name                = "slack-post-events"
   schedule_expression = "cron(0 16 * * ? *)"
 }
 
-resource aws_cloudwatch_event_rule noon_est {
-  description         = "Every day at 12pm Eastern Standard Time"
-  name                = "every-day-at-12pm-est"
-  schedule_expression = "cron(0 17 * * ? *)"
-}
-
 resource aws_cloudwatch_event_target target {
-  rule  = "${local.rule_name}"
+  rule  = "${aws_cloudwatch_event_rule.rule.name}"
   arn   = "${aws_lambda_function.lambda.arn}"
   input = "${jsonencode("${local.message}")}"
 }
@@ -102,7 +93,7 @@ resource aws_lambda_permission cloudwatch {
   action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.lambda.function_name}"
   principal     = "events.amazonaws.com"
-  source_arn    = "${local.rule_arn}"
+  source_arn    = "${aws_cloudwatch_event_rule.rule.arn}"
   statement_id  = "AllowExecutionFromCloudwatch"
 }
 

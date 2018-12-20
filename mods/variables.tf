@@ -10,6 +10,6 @@ variable role_name {
   description = "Slackbot role name."
 }
 
-variable slack_secret_name {
+variable secret_name {
   description = "Name of Slackbot secret in AWS SecretsManager."
 }

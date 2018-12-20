@@ -70,7 +70,7 @@ module slash_command {
   api_name      = "${var.api_name}"
   kms_key_arn   = "${var.kms_key_arn}"
   role_name     = "${var.role_name}"
-  secret_name   = "${var.slack_secret_name}"
+  secret_name   = "${var.secret_name}"
   slash_command = "events"
 
   response {

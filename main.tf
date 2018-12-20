@@ -24,18 +24,18 @@ data terraform_remote_state socialismbot {
 }
 
 module events {
-  source             = "./events"
-  api_name           = "${data.terraform_remote_state.socialismbot.api_name}"
-  kms_key_arn        = "${data.terraform_remote_state.socialismbot.kms_key_arn}"
-  role_name          = "${data.terraform_remote_state.socialismbot.role_name}"
-  slack_secret_name  = "${data.terraform_remote_state.socialismbot.secret_name}"
-  channel_events     = "${local.channel_events}"
+  source         = "./events"
+  api_name       = "${data.terraform_remote_state.socialismbot.api_name}"
+  kms_key_arn    = "${data.terraform_remote_state.socialismbot.kms_key_arn}"
+  role_name      = "${data.terraform_remote_state.socialismbot.role_name}"
+  secret_name    = "${data.terraform_remote_state.socialismbot.secret_name}"
+  channel_events = "${local.channel_events}"
 }
 
 module mods {
-  source            = "./mods"
-  api_name          = "${data.terraform_remote_state.socialismbot.api_name}"
-  role_name         = "${data.terraform_remote_state.socialismbot.role_name}"
-  slack_secret_name = "${data.terraform_remote_state.socialismbot.secret_name}"
-  channel_mods      = "${local.channel_mods}"
+  source       = "./mods"
+  api_name     = "${data.terraform_remote_state.socialismbot.api_name}"
+  role_name    = "${data.terraform_remote_state.socialismbot.role_name}"
+  secret_name  = "${data.terraform_remote_state.socialismbot.secret_name}"
+  channel_mods = "${local.channel_mods}"
 }

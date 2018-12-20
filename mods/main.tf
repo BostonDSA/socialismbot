@@ -28,7 +28,7 @@ resource aws_lambda_function callback {
   environment {
     variables {
       MOD_CHANNEL  = "${var.channel_mods}"
-      SLACK_SECRET = "${var.slack_secret_name}"
+      SLACK_SECRET = "${var.secret_name}"
     }
   }
 }

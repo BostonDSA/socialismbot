@@ -13,31 +13,29 @@ locals {
   channel_testing = "GB1SLKKL7"
 }
 
-module socialismbot {
-  source                  = "amancevice/slackbot/aws"
-  version                 = "8.4.1"
-  api_name                = "socialismbot"
-  base_url                = "/slack"
-  slack_bot_access_token  = "${var.slack_bot_access_token}"
-  slack_client_id         = "${var.slack_client_id}"
-  slack_client_secret     = "${var.slack_client_secret}"
-  slack_signing_secret    = "${var.slack_signing_secret}"
-  slack_user_access_token = "${var.slack_user_access_token}"
-}
-
-module mods {
-  source            = "./mods"
-  api_name          = "${module.socialismbot.api_name}"
-  role_name         = "${module.socialismbot.role_name}"
-  slack_secret_name = "${module.socialismbot.slack_secret_name}"
-  channel_mods      = "${local.channel_mods}"
+data terraform_remote_state socialismbot {
+  backend = "s3"
+  config {
+    bucket  = "terraform.bostondsa.org"
+    key     = "socialismbot.tfstate"
+    region  = "us-east-1"
+    profile = "bdsa"
+  }
 }
 
 module events {
   source             = "./events"
-  api_name           = "${module.socialismbot.api_name}"
-  kms_key_arn        = "${module.socialismbot.kms_key_arn}"
-  role_name          = "${module.socialismbot.role_name}"
-  slack_secret_name  = "${module.socialismbot.slack_secret_name}"
+  api_name           = "${data.terraform_remote_state.socialismbot.api_name}"
+  kms_key_arn        = "${data.terraform_remote_state.socialismbot.kms_key_arn}"
+  role_name          = "${data.terraform_remote_state.socialismbot.role_name}"
+  slack_secret_name  = "${data.terraform_remote_state.socialismbot.secret_name}"
   channel_events     = "${local.channel_events}"
+}
+
+module mods {
+  source            = "./mods"
+  api_name          = "${data.terraform_remote_state.socialismbot.api_name}"
+  role_name         = "${data.terraform_remote_state.socialismbot.role_name}"
+  slack_secret_name = "${data.terraform_remote_state.socialismbot.secret_name}"
+  channel_mods      = "${local.channel_mods}"
 }

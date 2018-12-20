@@ -1,0 +1,6 @@
+# AWS
+aws_profile = "bdsa"
+aws_region  = "us-east-1"
+
+# Events
+events_google_calendar_id = ""

@@ -12,7 +12,7 @@ OAuth requests are authenticated using the Slack client and redirected to the co
 
 ## Quickstart
 
-Fork & clone this repository, then create a file called `terraform.tfvars`. Use the following as a template:
+Clone this repository, then create a file called `terraform.tfvars`. Use the following as a template:
 
 ```terraform
 aws_access_key_id        = "<aws-access-key-id>"

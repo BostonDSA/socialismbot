@@ -1,6 +1,6 @@
 terraform {
   backend s3 {
-    bucket  = "boston-dsa-terraform"
+    bucket  = "terraform.bostondsa.org"
     key     = "socialismbot.tfstate"
     region  = "us-east-1"
     profile = "bdsa"

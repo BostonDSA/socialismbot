@@ -42,7 +42,7 @@ What does it all mean?
 
 ### Provider
 
-```terraform
+```hcl
 provider aws {
   version = "~> <x.y>"
   region  = "<aws-region>"
@@ -74,7 +74,7 @@ This way you are able to access AWS resources using the profile handle instead o
 
 ### Backend
 
-```terraform
+```hcl
 terraform {
   backend s3 {
     bucket  = "<your-bucket>"
@@ -91,7 +91,7 @@ _Note: you must have your AWS access keys properly configured for the backend to
 
 ### Modules
 
-```terraform
+```hcl
 module socialismbot {
   source     = "amancevice/slackbot/aws"
   api_name   = "socialismbot"
@@ -133,7 +133,7 @@ slack_socialismbot_slash_<cmd-name>
 
 ### Adding Features
 
-```terraform
+```hcl
 module my_feature {
   source = "./my-feature"
 }

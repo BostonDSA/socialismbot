@@ -13,37 +13,46 @@ locals {
   channel_testing = "GB1SLKKL7"
 }
 
-data terraform_remote_state socialismbot {
+data terraform_remote_state secrets {
   backend = "s3"
   config {
     bucket  = "terraform.bostondsa.org"
-    key     = "socialismbot.tfstate"
+    key     = "socialismbot-secrets.tfstate"
     region  = "us-east-1"
     profile = "bdsa"
   }
 }
 
+module socialismbot {
+  source     = "amancevice/slackbot/aws"
+  version    = "9.0.0"
+  api_name   = "socialismbot"
+  base_url   = "/slack"
+  secret_arn = "${data.terraform_remote_state.secrets.secret_arn}"
+  kms_key_id = "${data.terraform_remote_state.secrets.kms_key_id}"
+}
+
 module events {
   source         = "./events"
-  api_name       = "${data.terraform_remote_state.socialismbot.api_name}"
-  kms_key_arn    = "${data.terraform_remote_state.socialismbot.kms_key_arn}"
-  role_name      = "${data.terraform_remote_state.socialismbot.role_name}"
-  secret_name    = "${data.terraform_remote_state.socialismbot.secret_name}"
+  api_name       = "${module.socialismbot.api_name}"
+  kms_key_arn    = "${module.socialismbot.kms_key_arn}"
+  role_name      = "${module.socialismbot.role_name}"
+  secret_name    = "${module.socialismbot.secret_name}"
   channel_events = "${local.channel_events}"
 }
 
 module mods {
   source       = "./mods"
-  api_name     = "${data.terraform_remote_state.socialismbot.api_name}"
-  role_name    = "${data.terraform_remote_state.socialismbot.role_name}"
-  secret_name  = "${data.terraform_remote_state.socialismbot.secret_name}"
+  api_name     = "${module.socialismbot.api_name}"
+  role_name    = "${module.socialismbot.role_name}"
+  secret_name  = "${module.socialismbot.secret_name}"
   channel_mods = "${local.channel_mods}"
 }
 
 module welcome {
-  source             = "./welcome"
-  api_name           = "${data.terraform_remote_state.socialismbot.api_name}"
-  kms_key_arn        = "${data.terraform_remote_state.socialismbot.kms_key_arn}"
-  role_name          = "${data.terraform_remote_state.socialismbot.role_name}"
-  slack_secret_name  = "${data.terraform_remote_state.socialismbot.secret_name}"
+  source            = "./welcome"
+  api_name          = "${module.socialismbot.api_name}"
+  kms_key_arn       = "${module.socialismbot.kms_key_arn}"
+  role_name         = "${module.socialismbot.role_name}"
+  slack_secret_name = "${module.socialismbot.secret_name}"
 }

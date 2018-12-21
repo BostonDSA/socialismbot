@@ -3,19 +3,9 @@ output api_name {
   value       = "${module.socialismbot.api_name}"
 }
 
-output kms_key_arn {
-  description = "KMS Key ARN."
-  value       = "${module.socialismbot.kms_key_arn}"
-}
-
 output role_name {
   description = "Name of basic execution role for Slackbot lambdas."
   value       = "${module.socialismbot.role_name}"
-}
-
-output secret_name {
-  description = "Slackbot SecretsManager secret name."
-  value       = "${module.socialismbot.secret_name}"
 }
 
 output post_message_topic_arn {

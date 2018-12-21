@@ -6,11 +6,11 @@ provider aws {
   region     = "${var.aws_region}"
 }
 
-module socialismbot {
-  source                  = "amancevice/slackbot/aws"
-  version                 = "8.4.3"
-  api_name                = "socialismbot"
-  base_url                = "/slack"
+module secrets {
+  source                  = "amancevice/slackbot-secrets/aws"
+  version                 = "0.0.1"
+  kms_key_alias           = "alias/slack/socialismbot"
+  secret_name             = "slack/socialismbot"
   slack_bot_access_token  = "${var.slack_bot_access_token}"
   slack_client_id         = "${var.slack_client_id}"
   slack_client_secret     = "${var.slack_client_secret}"

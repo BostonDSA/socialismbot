@@ -39,3 +39,11 @@ module mods {
   secret_name  = "${data.terraform_remote_state.socialismbot.secret_name}"
   channel_mods = "${local.channel_mods}"
 }
+
+module welcome {
+  source             = "./welcome"
+  api_name           = "${data.terraform_remote_state.socialismbot.api_name}"
+  kms_key_arn        = "${data.terraform_remote_state.socialismbot.kms_key_arn}"
+  role_name          = "${data.terraform_remote_state.socialismbot.role_name}"
+  slack_secret_name  = "${data.terraform_remote_state.socialismbot.secret_name}"
+}

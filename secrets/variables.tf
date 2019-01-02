@@ -18,8 +18,8 @@ variable aws_region {
   default     = "us-east-1"
 }
 
-variable slack_bot_access_token {
-  description = "Slack OAuth bot access token."
+variable slack_bot_token {
+  description = "Slack bot OAuth token."
 }
 
 variable slack_client_id {
@@ -30,10 +30,14 @@ variable slack_client_secret {
   description = "Slack Client Secret."
 }
 
+variable slack_legacy_token {
+  description = "Slack legacy OAuth token."
+}
+
 variable slack_signing_secret {
   description = "Slack signing secret."
 }
 
-variable slack_user_access_token {
-  description = "Slack OAuth user access token."
+variable slack_user_token {
+  description = "Slack user OAuth token."
 }

@@ -27,7 +27,7 @@ data terraform_remote_state secrets {
 # Core slackbot app
 module socialismbot {
   source     = "amancevice/slackbot/aws"
-  version    = "9.0.1"
+  version    = "10.0.0"
   api_name   = "socialismbot"
   base_url   = "/slack"
   secret_arn = "${data.terraform_remote_state.secrets.secret_arn}"

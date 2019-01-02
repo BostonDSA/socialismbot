@@ -26,7 +26,7 @@ function getSlack() {
     return SecretsManager.getSecretValue({
       SecretId: SLACK_SECRET
     }).promise().then((data) => {
-      slack = new WebClient(JSON.parse(data.SecretString).BOT_ACCESS_TOKEN);
+      slack = new WebClient(JSON.parse(data.SecretString).BOT_TOKEN);
       return slack;
     })
   }

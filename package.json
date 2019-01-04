@@ -2,6 +2,7 @@
   "scripts": {
     "package": "npm run package-events && npm run package-mods",
     "package-events": "docker-compose run package_events && docker-compose down",
-    "package-mods": "docker-compose run package_mods && docker-compose down"
+    "package-mods": "docker-compose run package_mods && docker-compose down",
+    "test": "terraform plan"
   }
 }

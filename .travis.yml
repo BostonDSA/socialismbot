@@ -1,0 +1,14 @@
+language: node_js
+services:
+  - docker
+before_install:
+  - docker-compose run terraform init
+install:
+  - docker-compose run package
+jobs:
+  include:
+    - stage: test
+      script: docker-compose run terraform plan
+    - stage: deploy
+      script: docker-compose run terraform apply -auto-approve
+      if: tag IS present

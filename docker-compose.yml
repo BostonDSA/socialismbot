@@ -20,3 +20,12 @@ services:
     image: lambci/lambda:build-nodejs8.10
     volumes:
     - ./mods:/var/task
+  terraform:
+    environment:
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+    image: hashicorp/terraform
+    volumes:
+      - ~/.aws:/root/.aws
+      - ./:/socialismbot
+    working_dir: /socialismbot

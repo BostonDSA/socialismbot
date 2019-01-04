@@ -7,5 +7,6 @@
   },
   "devDependencies": {
     "aws-sdk": "^2.377.0"
-  }
+  },
+  "private": true
 }

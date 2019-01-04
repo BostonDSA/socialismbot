@@ -4,5 +4,6 @@
   },
   "devDependencies": {
     "aws-sdk": "^2.371.0"
-  }
+  },
+  "private": true
 }

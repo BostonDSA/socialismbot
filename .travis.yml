@@ -7,12 +7,14 @@ cache:
     - "${HOME}/mods/node_modules"
 before_install:
   - docker-compose run terraform init
+  - export BUILD_TAG=$(date +%Y.%-m.%-d)
+  - export TF_VAR_release="${TRAVIS_TAG:-${BUILD_TAG}}"
 install:
   - docker-compose run build
 jobs:
   include:
     - stage: test
-      script: docker-compose run terraform plan
+      script: docker-compose run -e TF_VAR_events_google_calendar_id -e TF_VAR_release terraform plan
     - stage: deploy
-      script: docker-compose run terraform apply -auto-approve
+      script: docker-compose run -e TF_VAR_events_google_calendar_id -e TF_VAR_release terraform apply -auto-approve
       if: tag IS present

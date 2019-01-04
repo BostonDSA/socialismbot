@@ -21,3 +21,7 @@ variable aws_region {
 variable events_google_calendar_id {
   description = "Google Calendar ID."
 }
+
+variable release {
+  description = "Release tag"
+}

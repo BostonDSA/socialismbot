@@ -36,6 +36,11 @@ module socialismbot {
   base_url   = "/slack"
   secret_arn = "${data.terraform_remote_state.secrets.secret_arn}"
   kms_key_id = "${data.terraform_remote_state.secrets.kms_key_id}"
+
+  lambda_tags {
+    App     = "socialismbot"
+    Release = "${var.release}"
+  }
 }
 
 # Events module for posting daily events
@@ -46,6 +51,11 @@ module events {
   role_name      = "${module.socialismbot.role_name}"
   secret_name    = "${module.socialismbot.secret_name}"
   channel_events = "${local.channel_events}"
+
+  lambda_tags {
+    App     = "socialismbot"
+    Release = "${var.release}"
+  }
 }
 
 # Moderator module for allowing members to report messages to mods
@@ -55,6 +65,11 @@ module mods {
   role_name    = "${module.socialismbot.role_name}"
   secret_name  = "${module.socialismbot.secret_name}"
   channel_mods = "${local.channel_mods}"
+
+  lambda_tags {
+    App     = "socialismbot"
+    Release = "${var.release}"
+  }
 }
 
 # Welcome module for welcoming members to the Slack
@@ -64,4 +79,9 @@ module welcome {
   kms_key_arn = "${module.socialismbot.kms_key_arn}"
   role_name   = "${module.socialismbot.role_name}"
   secret_name = "${module.socialismbot.secret_name}"
+
+  lambda_tags {
+    App     = "socialismbot"
+    Release = "${var.release}"
+  }
 }

@@ -6,6 +6,12 @@ variable channel_mods {
   description = "Slack moderator channel ID."
 }
 
+variable lambda_tags {
+  description = "Lambda function tags."
+  default     = {}
+  type        = "map"
+}
+
 variable role_name {
   description = "Slackbot role name."
 }

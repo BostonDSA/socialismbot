@@ -23,5 +23,9 @@ variable events_google_calendar_id {
 }
 
 variable release {
-  description = "Release tag"
+  description = "Release tag."
+}
+
+variable repo {
+  description = "Project repository."
 }

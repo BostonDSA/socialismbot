@@ -2,6 +2,8 @@
 
 Terraform configuration for a Socialist Slackbot's back end.
 
+This repo is configured to [deploy automatically](./.travis.yml) on tagged releases.
+
 ## Architecture
 
 The archetecture for the Slackbot API is fairly straightforward. All requests are routed asynchronously to to SNS. By convention, payloads are routed to topics corresponding to the specific event:
@@ -14,100 +16,11 @@ OAuth requests are authenticated using the Slack client and redirected to the co
 
 <img alt="arch" src="https://github.com/amancevice/terraform-aws-slackbot/blob/master/docs/images/arch.png?raw=true"/>
 
-## Quickstart
-
-Clone this repository, then copy `terraform.tfvars.example` to `terraform.tfvars`. Fill in the values on the new file. This file can contain sensitive info so keep it safe!
-
-Next, initialize the terraform project:
-
-```bash
-terraform init
-```
-
-Build the project's dependencies (requires Docker):
-
-```bash
-npm run build
-```
-
-Review any pending changes with:
-
-```bash
-terraform plan
-```
-
-Finally, apply a new configuration (if necessary):
-
-```bash
-terraform apply
-```
-
-## Configuration Explained
-
-What does it all mean?
-
-### Provider
-
-```hcl
-provider aws {
-  version = "~> <x.y>"
-  region  = "<aws-region>"
-  profile = "<aws-profile>"
-}
-```
-
-The provider configures your connection to AWS, including the region to which your infrastructure will be applied. Use variables to hide the sensitive information from public view.
-
-It's recommended that you use [Named Profiles](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) instead of access keys to configure your AWS credentials.
-
-In your `~/.aws/credentials` file add a new access profile named `bdsa`:
-
-```ini
-[bdsa]
-aws_access_key_id = <your-access-key>
-aws_secret_access_key = <your-secret-access-key>
-```
-
-Next, in your `~/aws/config` file add a new aws profile:
-
-```ini
-[profile bdsa]
-region = us-east-1
-source_profile = bdsa
-```
-
-This way you are able to access AWS resources using the profile handle instead of peppering sensitive keys throughout your filesystem in `.env` or `terraform.tfvars` files.
-
-### Backend
-
-```hcl
-terraform {
-  backend s3 {
-    bucket  = "<your-bucket>"
-    key     = "<your-bot>.tfstate"
-    region  = "<aws-region>"
-    profile = "<aws-profile>"
-  }
-}
-```
-
-Terraform has the option to store the state of your project remotely. This is useful when you want to share outputs from one project with another or simpley between developers.
-
-_Note: you must have your AWS access keys properly configured for the backend to load correctly._
-
-### Modules
-
-```hcl
-module socialismbot {
-  source     = "amancevice/slackbot/aws"
-  api_name   = "socialismbot"
-  base_url   = "/slack"
-  secret_arn = "<secret-arn>"
-  kms_key_id = "<kms-key-id>"
-}
-```
+## Modules
 
 Each component of the Slackbot is modular so that features can be added or removed more easily.
+
+### Core
 
 The core of the app resides in the first module, named `socialismbot`. This module creates the API Gateway and Lambda resourced needed to communicate with Slack. The core is designed to be agnostic to the features you add and will attempt to handle any callback, events, or slash commands it receives, whether they exist or not.
 
@@ -137,7 +50,19 @@ For slash commands, the name of the slash command ( ie, the [`cmd`] value of the
 slack_socialismbot_slash_<cmd-name>
 ```
 
-### Adding Features
+### Events
+
+The `events` module is responsible for posting a daily digest of events to the [#events](https://bostondsa.slack.com/messages/C7F7Z0WJG) channel each day.
+
+In addition a `/events` slash command is implemented to post events to arbitrary Slack conversations.
+
+### Mods
+
+The `mods` module implements the feature that allows users to report messages to the locked moderator channel.
+
+Reporting a message is possible by selecting the overflow menu for a message and choosing the _Report message_ option.
+
+## Adding Features
 
 ```hcl
 module my_feature {

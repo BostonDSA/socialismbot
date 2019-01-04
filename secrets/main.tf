@@ -17,4 +17,10 @@ module secrets {
   slack_legacy_token   = "${var.slack_legacy_token}"
   slack_signing_secret = "${var.slack_signing_secret}"
   slack_user_token     = "${var.slack_user_token}"
+
+  secret_tags {
+    App     = "socialismbot"
+    Repo    = "${var.repo}"
+    Release = "${var.release}"
+  }
 }

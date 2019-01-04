@@ -18,6 +18,14 @@ variable aws_region {
   default     = "us-east-1"
 }
 
+variable release {
+  description = "Release tag."
+}
+
+variable repo {
+  description = "Project repository."
+}
+
 variable slack_bot_token {
   description = "Slack bot OAuth token."
 }

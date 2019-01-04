@@ -1,3 +1,7 @@
+provider archive {
+  version = "~> 1.1"
+}
+
 provider aws {
   version = "~> 1.52"
   access_key = "${var.aws_access_key_id}"

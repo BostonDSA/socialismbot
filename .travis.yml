@@ -1,10 +1,14 @@
 language: node_js
 services:
   - docker
+cache:
+  directories:
+    - "${HOME}/events/node_modules"
+    - "${HOME}/mods/node_modules"
 before_install:
   - docker-compose run terraform init
 install:
-  - docker-compose run package
+  - docker-compose run build
 jobs:
   include:
     - stage: test

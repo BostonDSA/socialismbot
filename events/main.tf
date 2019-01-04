@@ -22,6 +22,12 @@ locals {
   }
 }
 
+data archive_file package {
+  type        = "zip"
+  source_dir  = "${path.module}/"
+  output_path = "${path.module}/package.zip"
+}
+
 data aws_kms_key key {
   key_id = "alias/aws/secretsmanager"
 }
@@ -142,13 +148,13 @@ resource aws_iam_role_policy events {
 
 resource aws_lambda_function callback {
   description      = "Publish Google Calendar events to Slack"
-  filename         = "${path.module}/package.zip"
+  filename         = "${data.archive_file.package.output_path}"
   function_name    = "slack-socialismbot-callback-events"
   handler          = "index.handler"
   memory_size      = 1024
   role             = "${data.aws_iam_role.role.arn}"
   runtime          = "nodejs8.10"
-  source_code_hash = "${base64sha256(file("${path.module}/package.zip"))}"
+  source_code_hash = "${data.archive_file.package.output_base64sha256}"
   timeout          = 3
 
   environment {

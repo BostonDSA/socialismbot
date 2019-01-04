@@ -1,8 +1,7 @@
 {
   "scripts": {
-    "package": "npm run package-events && npm run package-mods",
-    "package-events": "docker-compose run package_events && docker-compose down",
-    "package-mods": "docker-compose run package_mods && docker-compose down",
-    "test": "terraform plan"
+    "build": "docker-compose run build && docker-compose down",
+    "package": "docker-compose run package && docker-compose down",
+    "test": "docker-compose run terraform plan"
   }
 }

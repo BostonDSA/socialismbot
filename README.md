@@ -24,6 +24,12 @@ Next, initialize the terraform project:
 terraform init
 ```
 
+Build the project's dependencies (requires Docker):
+
+```bash
+npm run build
+```
+
 Review any pending changes with:
 
 ```bash

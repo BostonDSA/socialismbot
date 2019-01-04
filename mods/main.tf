@@ -5,6 +5,12 @@ locals {
   ]
 }
 
+data archive_file package {
+  type        = "zip"
+  source_dir  = "${path.module}/"
+  output_path = "${path.module}/package.zip"
+}
+
 data aws_iam_role role {
   name = "${var.role_name}"
 }
@@ -16,13 +22,13 @@ resource aws_cloudwatch_log_group callback_logs {
 
 resource aws_lambda_function callback {
   description      = "Slackbot moderator helper"
-  filename         = "${path.module}/package.zip"
+  filename         = "${data.archive_file.package.output_path}"
   function_name    = "slack-${var.api_name}-callback-mods"
   handler          = "index.handler"
   memory_size      = 1024
   role             = "${data.aws_iam_role.role.arn}"
   runtime          = "nodejs8.10"
-  source_code_hash = "${base64sha256(file("${path.module}/package.zip"))}"
+  source_code_hash = "${data.archive_file.package.output_base64sha256}"
   timeout          = 10
 
   environment {

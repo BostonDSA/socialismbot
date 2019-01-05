@@ -20,6 +20,7 @@ variable aws_region {
 
 variable events_google_calendar_id {
   description = "Google Calendar ID."
+  default     = "u21m8kt8bb1lflp8jpmd317iik@group.calendar.google.com"
 }
 
 variable release {

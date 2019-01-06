@@ -29,4 +29,5 @@ variable release {
 
 variable repo {
   description = "Project repository."
+  default     = "https://github.com/BostonDSA/socialismbot.git"
 }

@@ -52,7 +52,7 @@ module events {
   kms_key_arn    = "${module.socialismbot.kms_key_arn}"
   role_name      = "${module.socialismbot.role_name}"
   secret_name    = "${module.socialismbot.secret_name}"
-  channel_events = "${local.channel_events}"
+  channel        = "${local.channel_events}"
   lambda_tags    = "${local.lambda_tags}"
 }
 
@@ -60,9 +60,10 @@ module events {
 module mods {
   source       = "./mods"
   api_name     = "${module.socialismbot.api_name}"
+  kms_key_arn  = "${module.socialismbot.kms_key_arn}"
   role_name    = "${module.socialismbot.role_name}"
   secret_name  = "${module.socialismbot.secret_name}"
-  channel_mods = "${local.channel_mods}"
+  channel      = "${local.channel_mods}"
   lambda_tags  = "${local.lambda_tags}"
 }
 

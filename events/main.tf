@@ -7,7 +7,7 @@ locals {
   payload {
     callback_id = "events_post"
     submission {
-      conversation = "${var.channel_events}"
+      conversation = "${var.channel}"
     }
   }
 

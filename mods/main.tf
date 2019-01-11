@@ -24,6 +24,7 @@ resource aws_lambda_function callback {
   description      = "Slackbot moderator helper"
   filename         = "${data.archive_file.package.output_path}"
   function_name    = "slack-${var.api_name}-callback-mods"
+  kms_key_arn      = "${var.kms_key_arn}"
   handler          = "index.handler"
   memory_size      = 1024
   role             = "${data.aws_iam_role.role.arn}"
@@ -34,7 +35,7 @@ resource aws_lambda_function callback {
 
   environment {
     variables {
-      MOD_CHANNEL  = "${var.channel_mods}"
+      MOD_CHANNEL  = "${var.channel}"
       SLACK_SECRET = "${var.secret_name}"
     }
   }

@@ -2,8 +2,12 @@ variable api_name {
   description = "Slackbot REST API Gateway Name."
 }
 
-variable channel_mods {
-  description = "Slack moderator channel ID."
+variable channel {
+  description = "Slack channel ID."
+}
+
+variable kms_key_arn {
+  description = "KMS Key ARN for Lambdas."
 }
 
 variable lambda_tags {
@@ -17,5 +21,5 @@ variable role_name {
 }
 
 variable secret_name {
-  description = "Name of Slackbot secret in AWS SecretsManager."
+  description = "Slackbot secretsmanager secret name."
 }

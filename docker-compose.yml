@@ -17,10 +17,11 @@ services:
     environment:
       AWS_ACCESS_KEY_ID:
       AWS_SECRET_ACCESS_KEY:
+      AWS_PROFILE:
       TF_VAR_release:
       TF_VAR_repo:
     image: hashicorp/terraform
     volumes:
       - ~/.aws:/root/.aws
-      - ./:/socialismbot
-    working_dir: /socialismbot
+      - ./:/terraform
+    working_dir: /terraform

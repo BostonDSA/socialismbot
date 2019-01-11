@@ -3,7 +3,7 @@ provider archive {
 }
 
 provider aws {
-  version = "~> 1.52"
+  version    = "~> 1.55"
   access_key = "${var.aws_access_key_id}"
   secret_key = "${var.aws_secret_access_key}"
   profile    = "${var.aws_profile}"

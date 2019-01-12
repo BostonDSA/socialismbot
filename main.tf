@@ -56,6 +56,16 @@ module events {
   lambda_tags    = "${local.lambda_tags}"
 }
 
+# Invite members to Slack
+module invite {
+  source         = "./invite"
+  api_name       = "${module.socialismbot.api_name}"
+  kms_key_arn    = "${module.socialismbot.kms_key_arn}"
+  role_name      = "${module.socialismbot.role_name}"
+  secret_name    = "${module.socialismbot.secret_name}"
+  lambda_tags    = "${local.lambda_tags}"
+}
+
 # Moderator module for allowing members to report messages to mods
 module mods {
   source       = "./mods"

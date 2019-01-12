@@ -2,7 +2,9 @@
   "dependencies": {
     "@slack/client": "^4.8.0",
     "aws-sdk": "^2.384.0",
-    "dotenv": "^6.2.0"
+    "dotenv": "^6.2.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
   },
   "private": true,
   "scripts": {

@@ -18,6 +18,7 @@ data aws_iam_role role {
 resource aws_cloudwatch_log_group callback_logs {
   name              = "/aws/lambda/${aws_lambda_function.callback.function_name}"
   retention_in_days = 30
+  tags              = "${var.tags}"
 }
 
 resource aws_lambda_function callback {
@@ -30,7 +31,7 @@ resource aws_lambda_function callback {
   role             = "${data.aws_iam_role.role.arn}"
   runtime          = "nodejs8.10"
   source_code_hash = "${data.archive_file.package.output_base64sha256}"
-  tags             = "${var.lambda_tags}"
+  tags             = "${var.tags}"
   timeout          = 10
 
   environment {

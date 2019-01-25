@@ -23,7 +23,7 @@ resource aws_lambda_function callback {
   role             = "${data.aws_iam_role.role.arn}"
   runtime          = "nodejs8.10"
   source_code_hash = "${data.archive_file.package.output_base64sha256}"
-  tags             = "${var.lambda_tags}"
+  tags             = "${var.tags}"
   timeout          = 10
 
   environment {

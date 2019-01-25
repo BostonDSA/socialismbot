@@ -3,11 +3,11 @@ provider archive {
 }
 
 provider aws {
-  version    = "~> 1.55"
   access_key = "${var.aws_access_key_id}"
-  secret_key = "${var.aws_secret_access_key}"
   profile    = "${var.aws_profile}"
   region     = "${var.aws_region}"
+  secret_key = "${var.aws_secret_access_key}"
+  version    = "~> 1.56"
 }
 
 # Useful Slack chanel IDs
@@ -16,7 +16,7 @@ locals {
   channel_mods    = "G7FAX48KX"
   channel_testing = "GB1SLKKL7"
 
-  lambda_tags {
+  tags {
     App     = "socialismbot"
     Release = "${var.release}"
     Repo    = "${var.repo}"
@@ -36,13 +36,15 @@ data terraform_remote_state secrets {
 
 # Core slackbot app
 module socialismbot {
-  source      = "amancevice/slackbot/aws"
-  version     = "10.0.0"
-  api_name    = "socialismbot"
-  base_url    = "/slack"
-  secret_arn  = "${data.terraform_remote_state.secrets.secret_arn}"
-  kms_key_id  = "${data.terraform_remote_state.secrets.kms_key_id}"
-  lambda_tags = "${local.lambda_tags}"
+  source         = "amancevice/slackbot/aws"
+  version        = "11.0.0"
+  api_name       = "socialismbot"
+  base_url       = "/slack"
+  kms_key_id     = "${data.terraform_remote_state.secrets.kms_key_id}"
+  lambda_tags    = "${local.tags}"
+  log_group_tags = "${local.tags}"
+  role_tags      = "${local.tags}"
+  secret_arn     = "${data.terraform_remote_state.secrets.secret_arn}"
 }
 
 # Events module for posting daily events
@@ -53,7 +55,7 @@ module events {
   role_name      = "${module.socialismbot.role_name}"
   secret_name    = "${module.socialismbot.secret_name}"
   channel        = "${local.channel_events}"
-  lambda_tags    = "${local.lambda_tags}"
+  tags           = "${local.tags}"
 }
 
 # Invite members to Slack
@@ -63,7 +65,7 @@ module invite {
   kms_key_arn    = "${module.socialismbot.kms_key_arn}"
   role_name      = "${module.socialismbot.role_name}"
   secret_name    = "${module.socialismbot.secret_name}"
-  lambda_tags    = "${local.lambda_tags}"
+  tags           = "${local.tags}"
 }
 
 # Moderator module for allowing members to report messages to mods
@@ -74,7 +76,7 @@ module mods {
   role_name    = "${module.socialismbot.role_name}"
   secret_name  = "${module.socialismbot.secret_name}"
   channel      = "${local.channel_mods}"
-  lambda_tags  = "${local.lambda_tags}"
+  tags         = "${local.tags}"
 }
 
 # Welcome module for welcoming members to the Slack
@@ -84,5 +86,5 @@ module welcome {
   kms_key_arn = "${module.socialismbot.kms_key_arn}"
   role_name   = "${module.socialismbot.role_name}"
   secret_name = "${module.socialismbot.secret_name}"
-  lambda_tags = "${local.lambda_tags}"
+  tags        = "${local.tags}"
 }

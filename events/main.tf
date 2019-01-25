@@ -71,13 +71,15 @@ data terraform_remote_state facebook_gcal_sync {
 }
 
 module slash_command {
-  source        = "amancevice/slackbot-slash-command/aws"
-  version       = "9.0.0"
-  api_name      = "${var.api_name}"
-  kms_key_arn   = "${var.kms_key_arn}"
-  role_name     = "${var.role_name}"
-  secret_name   = "${var.secret_name}"
-  slash_command = "events"
+  source         = "amancevice/slackbot-slash-command/aws"
+  version        = "10.0.0"
+  api_name       = "${var.api_name}"
+  kms_key_arn    = "${var.kms_key_arn}"
+  lambda_tags    = "${var.tags}"
+  log_group_tags = "${var.tags}"
+  role_name      = "${var.role_name}"
+  secret_name    = "${var.secret_name}"
+  slash_command  = "events"
 
   response {
     attachments = [
@@ -138,6 +140,7 @@ resource aws_cloudwatch_event_target callback_target {
 resource aws_cloudwatch_log_group callback_logs {
   name              = "/aws/lambda/${aws_lambda_function.callback.function_name}"
   retention_in_days = 30
+  tags              = "${var.tags}"
 }
 
 resource aws_iam_role_policy events {
@@ -155,7 +158,7 @@ resource aws_lambda_function callback {
   role             = "${data.aws_iam_role.role.arn}"
   runtime          = "nodejs8.10"
   source_code_hash = "${data.archive_file.package.output_base64sha256}"
-  tags             = "${var.lambda_tags}"
+  tags             = "${var.tags}"
   timeout          = 3
 
   environment {

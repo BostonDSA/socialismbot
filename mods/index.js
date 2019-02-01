@@ -1,4 +1,4 @@
-const MOD_CHANNEL = process.env.MOD_CHANNEL;
+const MOD_CHANNEL  = process.env.MOD_CHANNEL;
 const SLACK_SECRET = process.env.SLACK_SECRET;
 
 let payload, secrets, slack;
@@ -71,18 +71,18 @@ function reportMessageAction(payload) {
       state: res.permalink,
       elements: [
         {
-          hint: 'This will be posted to the moderators.',
-          label: 'Reason',
-          name: 'reason',
+          hint:        'This will be posted to the moderators.',
+          label:       'Reason',
+          name:        'reason',
           placeholder: 'Why is this thread being reported?',
-          type: 'textarea'
+          type:         'textarea'
         }
       ]
     };
     console.log(`DIALOG ${JSON.stringify(dialog)}`);
     return slack.dialog.open({
       trigger_id: payload.trigger_id,
-      dialog: dialog
+      dialog:     dialog
     });
   });
 }
@@ -95,21 +95,21 @@ function reportMessageAction(payload) {
  */
 function reportMessageSubmit(payload) {
   const options = {
-    channel: MOD_CHANNEL,
-    text: 'A message has been reported.',
+    channel:     MOD_CHANNEL,
+    text:        'A message has been reported.',
     attachments: [
       {
-        color: 'warning',
+        color:  'warning',
         footer: `Reported by <@${payload.user.id}>`,
-        text: payload.submission.reason,
-        ts: payload.action_ts,
+        text:   payload.submission.reason,
+        ts:     payload.action_ts,
       },
       {
-        color: 'danger',
-        footer: `Posted in <#${payload.channel.id}>`,
+        color:     'danger',
+        footer:    `Posted in <#${payload.channel.id}>`,
         mrkdwn_in: ['text'],
-        text: payload.state,
-        ts: payload.action_ts,
+        text:      payload.state,
+        ts:        payload.action_ts,
       }
     ]
   };
@@ -120,14 +120,14 @@ function reportMessageSubmit(payload) {
     return slack.im.open(options);
   }).then((res) => {
     const options = {
-      channel: res.channel.id,
-      text: 'We have received your report.',
+      channel:     res.channel.id,
+      text:        'We have received your report.',
       attachments: [
         {
-          color: 'warning',
+          color:  'warning',
           footer: `Reported by <@${payload.user.id}>`,
-          text: payload.submission.reason,
-          ts: payload.action_ts
+          text:   payload.submission.reason,
+          ts:     payload.action_ts
         }
       ]
     };

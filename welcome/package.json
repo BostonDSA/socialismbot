@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@slack/client": "^4.8.0"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.377.0"
+  },
+  "private": true
+}

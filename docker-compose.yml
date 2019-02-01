@@ -1,12 +1,18 @@
 version: '3'
 services:
+  npm:
+    entrypoint: npm
+    image: lambci/lambda:build-nodejs8.10
+    volumes:
+    - ./:/var/task
 
   # Build project dependencies
   build:
     command: >-
       sh -c "
         (cd events && npm install --production) &&
-        (cd mods && npm install --production)
+        (cd mods && npm install --production) &&
+        (cd welcome && npm install --production)
       "
     image: lambci/lambda:build-nodejs8.10
     volumes:

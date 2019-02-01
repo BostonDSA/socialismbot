@@ -7,7 +7,7 @@ provider aws {
   profile    = "${var.aws_profile}"
   region     = "${var.aws_region}"
   secret_key = "${var.aws_secret_access_key}"
-  version    = "~> 1.56"
+  version    = "~> 1.57"
 }
 
 # Useful Slack chanel IDs
@@ -81,10 +81,11 @@ module mods {
 
 # Welcome module for welcoming members to the Slack
 module welcome {
-  source      = "./welcome"
-  api_name    = "${module.socialismbot.api_name}"
-  kms_key_arn = "${module.socialismbot.kms_key_arn}"
-  role_name   = "${module.socialismbot.role_name}"
-  secret_name = "${module.socialismbot.secret_name}"
-  tags        = "${local.tags}"
+  source                 = "./welcome"
+  api_name               = "${module.socialismbot.api_name}"
+  kms_key_arn            = "${module.socialismbot.kms_key_arn}"
+  post_message_topic_arn = "${module.socialismbot.post_message_topic_arn}"
+  role_name              = "${module.socialismbot.role_name}"
+  secret_name            = "${module.socialismbot.secret_name}"
+  tags                   = "${local.tags}"
 }

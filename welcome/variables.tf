@@ -6,6 +6,10 @@ variable kms_key_arn {
   description = "KMS Key ARN for Lambda."
 }
 
+variable post_message_topic_arn {
+  description = "Slackbot post message SNS topic ARN."
+}
+
 variable role_name {
   description = "Role name for Lambda."
 }

@@ -6,20 +6,6 @@ locals {
   testing           = "GB1SLKKL7"
 
   welcome {
-    actions = [
-      {
-        text = "Learn More"
-        type = "button"
-        url  = "https://drive.google.com/file/d/0B6OdCRb_vSGzeTV4akFSRHF0NWs/view"
-      }
-    ]
-    color     = "#f0433a"
-    pretext   = ":sparkles: *Welcome to Boston DSA!* :sparkles:"
-    mrkdwn_in = ["pretext", "text"]
-    text      = "Take a moment to review the <https://www.dsausa.org/respectful_discussion|DSA Guidelines for Respectful Discussion>.\nMembers should adhere to the <https://bit.ly/BDSACode|Boston DSA Code of Conduct> at all times."
-  }
-
-  guidelines {
     actions   = [
       {
         text = "Learn More"
@@ -27,7 +13,7 @@ locals {
         url  = "https://get.slack.help/hc/en-us/articles/115000769927-Message-and-file-threads"
       }
     ]
-    color     = "#C9283E"
+    color     = "#f0433a"
     fields    = [
       {
         title = "Ask Questions!"
@@ -41,9 +27,10 @@ locals {
         title = "Threads"
         value = "If you'd like to get involved in a conversation please *join or start a thread* to avoid derailing other conversations by posting directly in the channel."
       }
-    ],
-    mrkdwn_in = ["fields", "pretext"]
-    pretext   = ":mega: *Discussion Guidelines*"
+    ]
+    pretext   = ":sparkles: *Welcome to Boston DSA!* :sparkles:"
+    mrkdwn_in = ["fields", "pretext", "text"]
+    text      = "Take a moment to review the <https://www.dsausa.org/respectful_discussion|DSA Guidelines for Respectful Discussion>.\nMembers should adhere to the <https://bit.ly/BDSACode|Boston DSA Code of Conduct> at all times.\nFor full details, consult the <https://drive.google.com/file/d/0B6OdCRb_vSGzeTV4akFSRHF0NWs/view|Boston DSA Slack Guidelines>"
   }
 
   channels {
@@ -54,7 +41,7 @@ locals {
         url  = "https://get.slack.help/hc/en-us/articles/218080037-Getting-started-for-new-members"
       }
     ]
-    color     = "#820333"
+    color     = "#C9283E"
     fields    = [
       {
         title = "Public Channels"
@@ -70,19 +57,25 @@ locals {
   }
 
   bot {
-    color       =  "#540032"
+    actions     = [
+      {
+        text = "Learn More"
+        type = "button"
+        url  = "https://members.bostondsa.org"
+      }
+    ]
+    color       =  "#820333"
     footer      =  "<https://github.com/BostonDSA/socialismbot|BostonDSA/socialismbot>"
     footer_icon =  "https://assets-cdn.github.com/favicon.ico"
     mrkdwn_in   =  ["pretext", "text"]
-    pretext     =  ":robot_face: *Socialismbot*"
-    text        =  "<@${local.socialismbot}> is Boston DSA's beautiful Marxist robot and he's here to help you!\nType `/welcome` in any chat to see this message again."
+    pretext     =  ":rose: *Socialismbot*"
+    text        =  "<@${local.socialismbot}> is Boston DSA's beautiful Marxist robot and he's here to help you!\nType `/welcome` in any chat to see this message again.\nVisit members.bostondsa.org for more member onboarding resources!"
   }
 
   slash_response {
     response_type = "ephemeral"
     attachments   = [
       "${local.welcome}",
-      "${local.guidelines}",
       "${local.channels}",
       "${local.bot}"
     ]
@@ -91,7 +84,6 @@ locals {
   event_response {
     attachments = [
       "${local.welcome}",
-      "${local.guidelines}",
       "${local.channels}",
       "${local.bot}"
     ]
@@ -128,16 +120,6 @@ locals {
         footer_icon = "https://assets-cdn.github.com/favicon.ico"
         mrkdwn_in = ["fields", "pretext"]
         pretext   = ":alarm_clock: *Weekly Slack Reminders*"
-      }
-    ]
-  }
-
-  weekly_reminders_sns {
-    Records = [
-      {
-        Sns {
-          Message = "${jsonencode(local.weekly_reminders)}"
-        }
       }
     ]
   }

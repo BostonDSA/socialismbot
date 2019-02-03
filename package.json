@@ -9,6 +9,8 @@
   "private": true,
   "scripts": {
     "build": "docker-compose run build && docker-compose down",
+    "plan": "docker-compose run terraform plan && docker-compose down",
+    "apply": "docker-compose run terraform apply && docker-compose down",
     "test": "docker-compose run terraform plan"
   }
 }

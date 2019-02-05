@@ -37,7 +37,7 @@ data terraform_remote_state secrets {
 # Core slackbot app
 module socialismbot {
   source         = "amancevice/slackbot/aws"
-  version        = "11.0.0"
+  version        = "11.1.0"
   api_name       = "socialismbot"
   base_url       = "/slack"
   kms_key_id     = "${data.terraform_remote_state.secrets.kms_key_id}"

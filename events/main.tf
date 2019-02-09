@@ -1,24 +1,9 @@
 locals {
-  callback_ids = [
-    "events",
-    "events_post",
-  ]
-
   payload {
     callback_id = "events_post"
     submission {
       conversation = "${var.channel}"
     }
-  }
-
-  message {
-    Records = [
-      {
-        Sns {
-          Message = "${jsonencode(local.payload)}}"
-        }
-      }
-    ]
   }
 
   response {
@@ -134,8 +119,8 @@ resource aws_cloudwatch_event_rule callback_rule {
 
 resource aws_cloudwatch_event_target callback_target {
   rule  = "${aws_cloudwatch_event_rule.callback_rule.name}"
-  arn   = "${aws_lambda_function.callback.arn}"
-  input = "${jsonencode("${local.message}")}"
+  arn   = "${aws_sns_topic.events_post.arn}"
+  input = "${jsonencode("${local.payload}")}"
 }
 
 resource aws_cloudwatch_log_group callback_logs {
@@ -179,26 +164,40 @@ resource aws_lambda_function callback {
 resource aws_lambda_permission callback_events {
   action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.callback.function_name}"
-  principal     = "events.amazonaws.com"
-  source_arn    = "${aws_cloudwatch_event_rule.callback_rule.arn}"
+  principal     = "sns.amazonaws.com"
+  source_arn    = "${aws_sns_topic.events.arn}"
 }
 
-resource aws_lambda_permission callback_sns {
-  count         = "${length(local.callback_ids)}"
+resource aws_lambda_permission events {
   action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.callback.function_name}"
   principal     = "sns.amazonaws.com"
-  source_arn    = "${element(aws_sns_topic.callback_topics.*.arn, count.index)}"
+  source_arn    = "${aws_sns_topic.events.arn}"
 }
 
-resource aws_sns_topic callback_topics {
-  count = "${length(local.callback_ids)}"
-  name  = "slack_${var.api_name}_callback_${element(local.callback_ids, count.index)}"
+resource aws_lambda_permission events_post {
+  action        = "lambda:InvokeFunction"
+  function_name = "${aws_lambda_function.callback.function_name}"
+  principal     = "sns.amazonaws.com"
+  source_arn    = "${aws_sns_topic.events_post.arn}"
 }
 
-resource aws_sns_topic_subscription callback_subscriptions {
-  count     = "${length(local.callback_ids)}"
+resource aws_sns_topic events {
+  name = "slack_${var.api_name}_callback_events"
+}
+
+resource aws_sns_topic events_post {
+  name = "slack_${var.api_name}_callback_events_post"
+}
+
+resource aws_sns_topic_subscription events {
   endpoint  = "${aws_lambda_function.callback.arn}"
   protocol  = "lambda"
-  topic_arn = "${element(aws_sns_topic.callback_topics.*.arn, count.index)}"
+  topic_arn = "${aws_sns_topic.events.arn}"
+}
+
+resource aws_sns_topic_subscription events_post {
+  endpoint  = "${aws_lambda_function.callback.arn}"
+  protocol  = "lambda"
+  topic_arn = "${aws_sns_topic.events_post.arn}"
 }

@@ -167,6 +167,8 @@ const submitPost = async (payload) => {
 const handle = async (record) => {
   console.log(`MESSAGE ${record.Sns.Message}`);
   const payload = JSON.parse(record.Sns.Message);
+
+  // Handle slash-command + dialog
   if (payload.callback_id === 'events') {
     return Promise.all(payload.actions.map((action) => {
       if (action.value === 'post') {
@@ -175,6 +177,8 @@ const handle = async (record) => {
         return actionSync(payload);
       }
     }));
+
+  // Handle posting events
   } else if (payload.callback_id === 'events_post') {
     return submitPost(payload);
   }

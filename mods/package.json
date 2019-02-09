@@ -3,7 +3,7 @@
     "@slack/client": "^4.8.0"
   },
   "devDependencies": {
-    "aws-sdk": "^2.371.0"
+    "aws-sdk": "^2.400.0"
   },
   "private": true
 }

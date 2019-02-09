@@ -20,6 +20,49 @@ locals {
       }
     ]
   }
+
+  response {
+    attachments = [
+      {
+        callback_id = "events"
+        color       = "#b71c1c"
+        fallback    = "Chapter Events"
+        mrkdwn_in   = ["text"]
+        text        = "Post today's events to a conversation you are in.\nOr copy <https://facebook.com/BostonDSA|facebook> events to <https://calendar.google.com/calendar/r?cid=dTIxbThrdDhiYjFsZmxwOGpwbWQzMTdpaWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ|Google Calendar> _(this auto-runs hourly)_."
+        actions     = [
+          {
+            name  = "post"
+            text  = "Post events"
+            type  = "button"
+            value = "post"
+          },
+          {
+            name  = "sync"
+            text  = "Sync facebook"
+            type  = "button"
+            value = "sync"
+          }
+        ]
+      },
+      {
+        color       = "#b71c1c"
+        title       = "Subscribe to this Calendar!"
+        fallback    = "Subscribe to this Calendar!"
+        footer      = "<https://github.com/BostonDSA/socialismbot|BostonDSA/socialismbot>"
+        footer_icon = "https://assets-cdn.github.com/favicon.ico"
+        mrkdwn_in   = ["text"]
+        text        = "_Have you ever missed a Boston DSA event because you didn't hear about it until it was too late? Subscribe to this calendar to receive push notifications about upcoming DSA events sent directly to your mobile device._",
+        actions     = [
+          {
+            type = "button",
+            name = "subscribe",
+            text = "Subscribe",
+            url  = "https://calendars.dsausa.org/u21m8kt8bb1lflp8jpmd317iik%40group.calendar.google.com"
+          }
+        ]
+      }
+    ]
+  }
 }
 
 data archive_file package {
@@ -72,57 +115,15 @@ data terraform_remote_state facebook_gcal_sync {
 
 module slash_command {
   source         = "amancevice/slackbot-slash-command/aws"
-  version        = "10.0.0"
+  version        = "11.0.0"
   api_name       = "${var.api_name}"
   kms_key_arn    = "${var.kms_key_arn}"
   lambda_tags    = "${var.tags}"
   log_group_tags = "${var.tags}"
+  response       = "${jsonencode(local.response)}"
   role_name      = "${var.role_name}"
   secret_name    = "${var.secret_name}"
   slash_command  = "events"
-
-  response {
-    attachments = [
-      {
-        callback_id = "events"
-        color       = "#b71c1c"
-        fallback    = "Chapter Events"
-        mrkdwn_in   = ["text"]
-        text        = "Post today's events to a conversation you are in.\nOr copy <https://facebook.com/BostonDSA|facebook> events to <https://calendar.google.com/calendar/r?cid=dTIxbThrdDhiYjFsZmxwOGpwbWQzMTdpaWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ|Google Calendar> _(this auto-runs hourly)_."
-        actions     = [
-          {
-            name  = "post"
-            text  = "Post events"
-            type  = "button"
-            value = "post"
-          },
-          {
-            name  = "sync"
-            text  = "Sync facebook"
-            type  = "button"
-            value = "sync"
-          }
-        ]
-      },
-      {
-        color       = "#b71c1c"
-        title       = "Subscribe to this Calendar!"
-        fallback    = "Subscribe to this Calendar!"
-        footer      = "<https://github.com/BostonDSA/socialismbot|BostonDSA/socialismbot>"
-        footer_icon = "https://assets-cdn.github.com/favicon.ico"
-        mrkdwn_in   = ["text"]
-        text        = "_Have you ever missed a Boston DSA event because you didn't hear about it until it was too late? Subscribe to this calendar to receive push notifications about upcoming DSA events sent directly to your mobile device._",
-        actions     = [
-          {
-            type = "button",
-            name = "subscribe",
-            text = "Subscribe",
-            url  = "https://calendars.dsausa.org/u21m8kt8bb1lflp8jpmd317iik%40group.calendar.google.com"
-          }
-        ]
-      }
-    ]
-  }
 }
 
 resource aws_cloudwatch_event_rule callback_rule {
@@ -170,7 +171,6 @@ resource aws_lambda_function callback {
       HELP_URL                    = "https://github.com/BostonDSA/socialismbot/blob/master/slash/events/docs/help.md#help"
       SLACK_COLOR                 = "#b71c1c"
       SLACK_SECRET                = "slack/socialismbot"
-      STATE_MACHINE_ARN           = "arn:aws:states:us-east-1:715992480927:stateMachine:facebook-gcal-sync"
       TZ                          = "America/New_York"
     }
   }

@@ -29,13 +29,6 @@ module secrets {
   slack_token              = "${var.slack_token}"
 
   secrets {
-    BOT_TOKEN          = "${var.slack_token}"
-    CLIENT_ID          = "${var.slack_client_id}"
-    CLIENT_SECRET      = "${var.slack_client_secret}"
-    LEGACY_TOKEN       = "${var.slack_legacy_token}"
-    SIGNING_SECRET     = "${var.slack_signing_secret}"
-    SIGNING_VERSION    = "${var.slack_signing_version}"
     SLACK_LEGACY_TOKEN = "${var.slack_legacy_token}"
-    USER_TOKEN         = "${var.slack_user_token}"
   }
 }

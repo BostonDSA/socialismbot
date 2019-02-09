@@ -10,10 +10,11 @@ services:
   build:
     command: >-
       sh -c "
-        (cd events && npm install --production) &&
-        (cd invite && npm install --production) &&
-        (cd mods && npm install --production) &&
-        (cd welcome && npm install --production)
+        (cd events  && npm install --production) &&
+        (cd invite  && npm install --production) &&
+        (cd mods    && npm install --production) &&
+        (cd welcome && npm install --production) &&
+        echo done.
       "
     image: lambci/lambda:build-nodejs8.10
     volumes:

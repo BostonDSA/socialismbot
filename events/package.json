@@ -5,7 +5,7 @@
     "moment-timezone": "^0.5.23"
   },
   "devDependencies": {
-    "aws-sdk": "^2.377.0"
+    "aws-sdk": "^2.400.0"
   },
   "private": true
 }

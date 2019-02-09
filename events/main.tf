@@ -15,7 +15,7 @@ locals {
     Records = [
       {
         Sns {
-          Message = "${base64encode("${jsonencode("${local.payload}")}")}"
+          Message = "${jsonencode(local.payload)}}"
         }
       }
     ]

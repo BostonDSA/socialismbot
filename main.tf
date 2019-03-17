@@ -7,7 +7,7 @@ provider aws {
   profile    = "${var.aws_profile}"
   region     = "${var.aws_region}"
   secret_key = "${var.aws_secret_access_key}"
-  version    = "~> 1.58"
+  version    = "~> 2.2"
 }
 
 # Useful Slack chanel IDs
@@ -37,7 +37,7 @@ data terraform_remote_state secrets {
 # Core slackbot app
 module socialismbot {
   source         = "amancevice/slackbot/aws"
-  version        = "12.0.1"
+  version        = "12.3.0"
   api_name       = "socialismbot"
   base_url       = "/slack"
   kms_key_id     = "${data.terraform_remote_state.secrets.kms_key_id}"

@@ -41,7 +41,7 @@ resource aws_lambda_permission callback {
 }
 
 resource aws_sns_topic callback {
-  name  = "slack_${var.api_name}_callback_invite"
+  name = "slack_${var.api_name}_callback_invite"
 }
 
 resource aws_sns_topic_subscription callback {

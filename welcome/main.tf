@@ -6,15 +6,15 @@ locals {
   testing           = "GB1SLKKL7"
 
   welcome {
-    actions   = [
+    actions = [
       {
         text = "Learn More"
         type = "button"
         url  = "https://get.slack.help/hc/en-us/articles/115000769927-Message-and-file-threads"
       }
     ]
-    color     = "#f0433a"
-    fields    = [
+    color = "#f0433a"
+    fields = [
       {
         title = "Ask Questions!"
         value = "Feel free to ask a question any time in any channel. _We are all here to help each other!_ The <#${local.ask_sc}> or <#${local.slack_meta}> channels are a great place to start."
@@ -34,15 +34,15 @@ locals {
   }
 
   channels {
-    actions   = [
+    actions = [
       {
         text = "Learn More"
         type = "button"
         url  = "https://get.slack.help/hc/en-us/articles/218080037-Getting-started-for-new-members"
       }
     ]
-    color     = "#C9283E"
-    fields    = [
+    color = "#C9283E"
+    fields = [
       {
         title = "Public Channels"
         value = "Slack channels are like chat rooms; there are channels for working groups, committees, teams, caucuses and more! Click the word _Channels_ on the left panel to view all channels available to join."
@@ -57,24 +57,24 @@ locals {
   }
 
   bot {
-    actions     = [
+    actions = [
       {
         text = "Learn More"
         type = "button"
         url  = "https://members.bostondsa.org"
       }
     ]
-    color       =  "#820333"
-    footer      =  "<https://github.com/BostonDSA/socialismbot|BostonDSA/socialismbot>"
-    footer_icon =  "https://assets-cdn.github.com/favicon.ico"
-    mrkdwn_in   =  ["pretext", "text"]
-    pretext     =  ":rose: *Socialismbot*"
-    text        =  "<@${local.socialismbot}> is Boston DSA's beautiful Marxist robot and he's here to help you!\nType `/welcome` in any chat to see this message again.\nVisit members.bostondsa.org for more member onboarding resources!"
+    color       = "#820333"
+    footer      = "<https://github.com/BostonDSA/socialismbot|BostonDSA/socialismbot>"
+    footer_icon = "https://assets-cdn.github.com/favicon.ico"
+    mrkdwn_in   = ["pretext", "text"]
+    pretext     = ":rose: *Socialismbot*"
+    text        = "<@${local.socialismbot}> is Boston DSA's beautiful Marxist robot and he's here to help you!\nType `/welcome` in any chat to see this message again.\nVisit members.bostondsa.org for more member onboarding resources!"
   }
 
   slash_response {
     response_type = "ephemeral"
-    attachments   = [
+    attachments = [
       "${local.welcome}",
       "${local.channels}",
       "${local.bot}"
@@ -90,19 +90,19 @@ locals {
   }
 
   weekly_reminders {
-    channel     = "${local.generaldiscussion}"
+    channel = "${local.generaldiscussion}"
     attachments = [
       {
-        actions   = [
+        actions = [
           {
             text = "Learn More"
             type = "button"
             url  = "https://get.slack.help/hc/en-us/articles/115000769927-Message-and-file-threads"
           }
         ]
-        color     = "#C9283E"
-        fallback  = "Weekly Slack reminders"
-        fields    = [
+        color    = "#C9283E"
+        fallback = "Weekly Slack reminders"
+        fields = [
           {
             title = "Ask Questions!"
             value = "Feel free to ask a question any time in any channel. _We are all here to help each other!_ The <#${local.ask_sc}> or <#${local.slack_meta}> channels are a great place to start."
@@ -118,8 +118,8 @@ locals {
         ],
         footer      = "<https://github.com/BostonDSA/socialismbot|BostonDSA/socialismbot>"
         footer_icon = "https://assets-cdn.github.com/favicon.ico"
-        mrkdwn_in = ["fields", "pretext"]
-        pretext   = ":alarm_clock: *Weekly Slack Reminders*"
+        mrkdwn_in   = ["fields", "pretext"]
+        pretext     = ":alarm_clock: *Weekly Slack Reminders*"
       }
     ]
   }

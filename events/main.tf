@@ -14,7 +14,7 @@ locals {
         fallback    = "Chapter Events"
         mrkdwn_in   = ["text"]
         text        = "Post today's events to a conversation you are in.\nOr copy <https://facebook.com/BostonDSA|facebook> events to <https://calendar.google.com/calendar/r?cid=dTIxbThrdDhiYjFsZmxwOGpwbWQzMTdpaWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ|Google Calendar> _(this auto-runs hourly)_."
-        actions     = [
+        actions = [
           {
             name  = "post"
             text  = "Post events"
@@ -37,7 +37,7 @@ locals {
         footer_icon = "https://assets-cdn.github.com/favicon.ico"
         mrkdwn_in   = ["text"]
         text        = "_Have you ever missed a Boston DSA event because you didn't hear about it until it was too late? Subscribe to this calendar to receive push notifications about upcoming DSA events sent directly to your mobile device._",
-        actions     = [
+        actions = [
           {
             type = "button",
             name = "subscribe",

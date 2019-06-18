@@ -11,6 +11,6 @@
 # backend
 .env
 
-# node
-node_modules/
-package.zip
+**/.terraform/
+**/node_modules/
+*.zip

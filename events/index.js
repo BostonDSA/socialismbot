@@ -63,7 +63,7 @@ const getAttachment = (event) => {
       title:    title,
     };
   }
-}
+};
 
 const actionPost = (payload) => {
   return slack.dialog.open({
@@ -103,7 +103,7 @@ const actionSync = async (payload) => {
       },
     ],
   });
-}
+};
 
 const submitPost = async (payload) => {
   const time      = moment(payload.action_ts * 1000 || +new Date());

@@ -137,7 +137,7 @@ data aws_iam_role role {
 
 module slash_command {
   source         = "amancevice/slackbot-slash-command/aws"
-  version        = "11.0.0"
+  version        = "13.0.0"
   api_name       = "${var.api_name}"
   kms_key_arn    = "${var.kms_key_arn}"
   lambda_tags    = "${var.tags}"

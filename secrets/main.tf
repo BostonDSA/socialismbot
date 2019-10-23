@@ -16,7 +16,7 @@ locals {
 
 module secrets {
   source                   = "amancevice/slackbot-secrets/aws"
-  version                  = "1.0.0"
+  version                  = "2.0.2"
   kms_key_alias            = "alias/slack/socialismbot"
   kms_key_tags             = "${local.tags}"
   secret_name              = "slack/socialismbot"

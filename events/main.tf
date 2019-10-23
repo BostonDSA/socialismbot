@@ -1,12 +1,12 @@
 locals {
-  payload {
+  payload = {
     callback_id = "events_post"
-    submission {
+    submission = {
       conversation = "${var.channel}"
     }
   }
 
-  response {
+  response = {
     attachments = [
       {
         callback_id = "events"
@@ -91,6 +91,7 @@ data aws_iam_role role {
 data terraform_remote_state facebook_gcal_sync {
   backend = "s3"
   config {
+
     bucket  = "terraform.bostondsa.org"
     key     = "facebook-gcal-sync.tfstate"
     region  = "us-east-1"

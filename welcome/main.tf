@@ -5,7 +5,7 @@ locals {
   socialismbot      = "UAJGYQCQ1"
   testing           = "GB1SLKKL7"
 
-  welcome {
+  welcome = {
     actions = [
       {
         text = "Learn More"
@@ -33,7 +33,7 @@ locals {
     text      = "Take a moment to review the <https://www.dsausa.org/respectful_discussion|DSA Guidelines for Respectful Discussion>.\nMembers should adhere to the <https://bit.ly/BDSACode|Boston DSA Code of Conduct> at all times.\nFor full details, consult the <https://drive.google.com/file/d/0B6OdCRb_vSGzeTV4akFSRHF0NWs/view|Boston DSA Slack Guidelines>"
   }
 
-  channels {
+  channels = {
     actions = [
       {
         text = "Learn More"
@@ -56,7 +56,7 @@ locals {
     pretext   = "*:tv: Slack Channels*"
   }
 
-  bot {
+  bot = {
     actions = [
       {
         text = "Learn More"
@@ -72,7 +72,7 @@ locals {
     text        = "<@${local.socialismbot}> is Boston DSA's beautiful Marxist robot and he's here to help you!\nType `/welcome` in any chat to see this message again.\nVisit members.bostondsa.org for more member onboarding resources!"
   }
 
-  slash_response {
+  slash_response = {
     response_type = "ephemeral"
     attachments = [
       "${local.welcome}",
@@ -81,7 +81,7 @@ locals {
     ]
   }
 
-  event_response {
+  event_response = {
     attachments = [
       "${local.welcome}",
       "${local.channels}",
@@ -89,7 +89,7 @@ locals {
     ]
   }
 
-  weekly_reminders {
+  weekly_reminders = {
     channel = "${local.generaldiscussion}"
     attachments = [
       {

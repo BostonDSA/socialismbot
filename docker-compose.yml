@@ -28,7 +28,7 @@ services:
       AWS_PROFILE:
       TF_VAR_release:
       TF_VAR_repo:
-    image: hashicorp/terraform:0.11.15
+    image: hashicorp/terraform:0.11.14
     volumes:
       - ~/.aws:/root/.aws
       - ./:/terraform

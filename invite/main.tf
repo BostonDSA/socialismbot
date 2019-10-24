@@ -21,7 +21,7 @@ resource aws_lambda_function callback {
   handler          = "index.handler"
   memory_size      = 1024
   role             = "${data.aws_iam_role.role.arn}"
-  runtime          = "nodejs8.10"
+  runtime          = "nodejs10.x"
   source_code_hash = "${data.archive_file.package.output_base64sha256}"
   tags             = "${var.tags}"
   timeout          = 10

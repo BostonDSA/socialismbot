@@ -14,7 +14,7 @@ const getToken = async (options) => {
   const secret = await secretsmanager.getSecretValue(options).promise();
   token = JSON.parse(secret.SecretString).SLACK_LEGACY_TOKEN;
   return token;
-}
+};
 
 const invite = async (options) => {
   const res = await request({
@@ -69,5 +69,5 @@ const handle = async (record) => {
 
 exports.handler = async (event) => {
   await Promise.resolve(token || getToken({SecretId: SLACK_SECRET}));
-  return await Promise.all(event.Records.map(handle))
+  return await Promise.all(event.Records.map(handle));
 };

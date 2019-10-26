@@ -146,6 +146,7 @@ module slash_command {
   role_name      = "${var.role_name}"
   secret_name    = "${var.secret_name}"
   slash_command  = "welcome"
+  slackbot_topic = "${aws_sns_topic.slash_welcome.arn}"
 }
 
 resource aws_cloudwatch_event_rule weekly_reminders {
@@ -195,6 +196,10 @@ resource aws_lambda_permission team_join {
 
 resource aws_sns_topic team_join {
   name = "slack_${var.api_name}_event_team_join"
+}
+
+resource aws_sns_topic slash_welcome {
+  name = "slack_${var.api_name}_slash_welcome"
 }
 
 resource aws_sns_topic_subscription team_join {

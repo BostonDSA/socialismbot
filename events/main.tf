@@ -113,6 +113,7 @@ module slash_command {
   role_name      = "${var.role_name}"
   secret_name    = "${var.secret_name}"
   slash_command  = "events"
+  slackbot_topic = "${aws_sns_topic.slash_events.arn}"
 }
 
 resource aws_cloudwatch_event_rule callback_rule {
@@ -192,6 +193,10 @@ resource aws_sns_topic events {
 
 resource aws_sns_topic events_post {
   name = "slack_${var.api_name}_callback_events_post"
+}
+
+resource aws_sns_topic slash_events {
+  name = "slack_${var.api_name}_slash_events"
 }
 
 resource aws_sns_topic_subscription events {

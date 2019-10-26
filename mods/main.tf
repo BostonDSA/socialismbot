@@ -35,7 +35,7 @@ resource aws_lambda_function callback {
   timeout          = 10
 
   environment {
-    variables {
+    variables = {
       MOD_CHANNEL  = "${var.channel}"
       SLACK_SECRET = "${var.secret_name}"
     }

@@ -179,7 +179,7 @@ resource aws_lambda_function team_join {
   timeout          = 3
 
   environment {
-    variables {
+    variables = {
       SLACK_SECRET = "${var.secret_name}"
       WELCOME      = "${jsonencode(local.event_response)}"
     }

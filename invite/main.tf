@@ -27,7 +27,7 @@ resource aws_lambda_function callback {
   timeout          = 10
 
   environment {
-    variables {
+    variables = {
       SLACK_SECRET = "${var.secret_name}"
     }
   }

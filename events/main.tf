@@ -1,6 +1,7 @@
 locals {
   payload = {
     callback_id = "events_post"
+
     submission = {
       conversation = "${var.channel}"
     }
@@ -14,6 +15,7 @@ locals {
         fallback    = "Chapter Events"
         mrkdwn_in   = ["text"]
         text        = "Post today's events to a conversation you are in.\nOr copy <https://facebook.com/BostonDSA|facebook> events to <https://calendar.google.com/calendar/r?cid=dTIxbThrdDhiYjFsZmxwOGpwbWQzMTdpaWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ|Google Calendar> _(this auto-runs hourly)_."
+
         actions = [
           {
             name  = "post"
@@ -26,7 +28,7 @@ locals {
             text  = "Sync facebook"
             type  = "button"
             value = "sync"
-          }
+          },
         ]
       },
       {
@@ -36,16 +38,17 @@ locals {
         footer      = "<https://github.com/BostonDSA/socialismbot|BostonDSA/socialismbot>"
         footer_icon = "https://assets-cdn.github.com/favicon.ico"
         mrkdwn_in   = ["text"]
-        text        = "_Have you ever missed a Boston DSA event because you didn't hear about it until it was too late? Subscribe to this calendar to receive push notifications about upcoming DSA events sent directly to your mobile device._",
+        text        = "_Have you ever missed a Boston DSA event because you didn't hear about it until it was too late? Subscribe to this calendar to receive push notifications about upcoming DSA events sent directly to your mobile device._"
+
         actions = [
           {
-            type = "button",
-            name = "subscribe",
-            text = "Subscribe",
+            type = "button"
+            name = "subscribe"
+            text = "Subscribe"
             url  = "https://calendars.dsausa.org/u21m8kt8bb1lflp8jpmd317iik%40group.calendar.google.com"
-          }
+          },
         ]
-      }
+      },
     ]
   }
 }
@@ -90,8 +93,8 @@ data aws_iam_role role {
 
 data terraform_remote_state facebook_gcal_sync {
   backend = "s3"
-  config {
 
+  config {
     bucket  = "terraform.bostondsa.org"
     key     = "facebook-gcal-sync.tfstate"
     region  = "us-east-1"

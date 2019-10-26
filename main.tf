@@ -82,11 +82,11 @@ module "mods" {
 
 # Welcome module for welcoming members to the Slack
 module "welcome" {
-  source                 = "./welcome"
-  api_name               = module.socialismbot.api_name
-  kms_key_arn            = module.socialismbot.kms_key_arn
-  topic_arn              = module.socialismbot.topic_arn
-  role_name              = module.socialismbot.role_name
-  secret_name            = module.socialismbot.secret_name
-  tags                   = local.tags
+  source      = "./welcome"
+  api_name    = module.socialismbot.api_name
+  kms_key_arn = module.socialismbot.kms_key_arn
+  topic_arn   = module.socialismbot.topic_arn
+  role_name   = module.socialismbot.role_name
+  secret_name = module.socialismbot.secret_name
+  tags        = local.tags
 }

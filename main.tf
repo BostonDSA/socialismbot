@@ -85,7 +85,7 @@ module "welcome" {
   source                 = "./welcome"
   api_name               = module.socialismbot.api_name
   kms_key_arn            = module.socialismbot.kms_key_arn
-  post_message_topic_arn = module.socialismbot.post_message_topic_arn
+  topic_arn              = module.socialismbot.topic_arn
   role_name              = module.socialismbot.role_name
   secret_name            = module.socialismbot.secret_name
   tags                   = local.tags

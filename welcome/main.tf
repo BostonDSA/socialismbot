@@ -157,7 +157,7 @@ resource aws_cloudwatch_event_rule weekly_reminders {
 
 resource aws_cloudwatch_event_target weekly_reminders {
   rule  = "${aws_cloudwatch_event_rule.weekly_reminders.name}"
-  arn   = "${var.post_message_topic_arn}"
+  arn   = "${var.topic_arn}"
   input = "${jsonencode("${local.weekly_reminders}")}"
 }
 

@@ -39,6 +39,7 @@ module "socialismbot" {
   source         = "amancevice/slackbot/aws"
   version        = "15.0.2"
   api_name       = "socialismbot"
+  app_name       = "socialismbot"
   base_url       = "/slack"
   kms_key_id     = data.terraform_remote_state.secrets.outputs.kms_key_id
   lambda_tags    = local.tags

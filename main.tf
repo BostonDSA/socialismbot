@@ -62,12 +62,13 @@ module "events" {
 
 # Invite members to Slack
 module "invite" {
-  source      = "./invite"
-  api_name    = module.socialismbot.api_name
-  kms_key_arn = module.socialismbot.kms_key_arn
-  role_name   = module.socialismbot.role_name
-  secret_name = module.socialismbot.secret_name
-  tags        = local.tags
+  source         = "./invite"
+  api_name       = module.socialismbot.api_name
+  kms_key_arn    = module.socialismbot.kms_key_arn
+  role_name      = module.socialismbot.role_name
+  secret_name    = module.socialismbot.secret_name
+  slackbot_topic = module.socialismbot.topic_name
+  tags           = local.tags
 }
 
 # Moderator module for allowing members to report messages to mods

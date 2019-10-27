@@ -37,9 +37,10 @@ data "terraform_remote_state" "secrets" {
 # Core slackbot app
 module "socialismbot" {
   source         = "amancevice/slackbot/aws"
-  version        = "15.0.2"
+  version        = "~> 15.0"
   api_name       = "socialismbot"
-  app_name       = "socialismbot"
+  api_stage_name = "v1"
+  app_name       = "slack-socialismbot"
   base_url       = "/slack"
   kms_key_id     = data.terraform_remote_state.secrets.outputs.kms_key_id
   lambda_tags    = local.tags

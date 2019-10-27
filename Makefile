@@ -35,7 +35,7 @@ apply: .docker/$(build)@plan
 	$(shell cat $<)
 
 clean:
-	-docker image rm $(shell awk {print} .docker/*)
+	-docker image rm -f $(shell awk {print} .docker/*)
 	-rm -rf .docker
 
 clobber: clean

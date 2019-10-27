@@ -1,8 +1,11 @@
 locals {
-  callback_ids = [
-    "report_message_action",
-    "report_message_submit",
-  ]
+  slackbot_topic = "${var.slackbot_topic}"
+
+
+  filter_policy = {
+    id   = ["report_message_action", "report_message_submit"]
+    type = ["callback"]
+  }
 }
 
 data archive_file package {
@@ -13,6 +16,10 @@ data archive_file package {
 
 data aws_iam_role role {
   name = "${var.role_name}"
+}
+
+data aws_sns_topic slackbot {
+  name = "${local.slackbot_topic}"
 }
 
 resource aws_cloudwatch_log_group callback_logs {
@@ -43,21 +50,15 @@ resource aws_lambda_function callback {
 }
 
 resource aws_lambda_permission trigger {
-  count         = "${length("${local.callback_ids}")}"
   action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.callback.function_name}"
   principal     = "sns.amazonaws.com"
-  source_arn    = "${element("${aws_sns_topic.callbacks.*.arn}", count.index)}"
-}
-
-resource aws_sns_topic callbacks {
-  count = "${length("${local.callback_ids}")}"
-  name  = "slack_${var.api_name}_callback_${element("${local.callback_ids}", count.index)}"
+  source_arn    = "${data.aws_sns_topic.slackbot.arn}"
 }
 
 resource aws_sns_topic_subscription subscription {
-  count     = "${length("${local.callback_ids}")}"
-  endpoint  = "${aws_lambda_function.callback.arn}"
-  protocol  = "lambda"
-  topic_arn = "${element("${aws_sns_topic.callbacks.*.arn}", count.index)}"
+  endpoint      = "${aws_lambda_function.callback.arn}"
+  protocol      = "lambda"
+  topic_arn     = "${data.aws_sns_topic.slackbot.arn}"
+  filter_policy = jsonencode(local.filter_policy)
 }

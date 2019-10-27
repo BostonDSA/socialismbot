@@ -74,13 +74,14 @@ module "invite" {
 
 # Moderator module for allowing members to report messages to mods
 module "mods" {
-  source      = "./mods"
-  api_name    = module.socialismbot.api_name
-  kms_key_arn = module.socialismbot.kms_key_arn
-  role_name   = module.socialismbot.role_name
-  secret_name = module.socialismbot.secret_name
-  channel     = local.channel_mods
-  tags        = local.tags
+  source         = "./mods"
+  api_name       = module.socialismbot.api_name
+  kms_key_arn    = module.socialismbot.kms_key_arn
+  role_name      = module.socialismbot.role_name
+  secret_name    = module.socialismbot.secret_name
+  slackbot_topic = module.socialismbot.topic_name
+  channel        = local.channel_mods
+  tags           = local.tags
 }
 
 # Welcome module for welcoming members to the Slack

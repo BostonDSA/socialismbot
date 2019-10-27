@@ -91,3 +91,23 @@ module "welcome" {
   secret_name = module.socialismbot.secret_name
   tags        = local.tags
 }
+
+resource "aws_sns_topic" "legacy_post_message" {
+  name = "slack_socialismbot_post_message"
+}
+
+resource "aws_sns_topic" "legacy_post_ephemeral" {
+  name = "slack_socialismbot_post_ephemeral"
+}
+
+resource "aws_sns_topic_subscription" "legacy_post_message" {
+  endpoint  = module.socialismbot.lambda_post_message_arn
+  protocol  = "lambda"
+  topic_arn = aws_sns_topic.legacy_post_message.arn
+}
+
+resource "aws_sns_topic_subscription" "legacy_post_ephemeral" {
+  endpoint  = module.socialismbot.lambda_post_ephemeral_arn
+  protocol  = "lambda"
+  topic_arn = aws_sns_topic.legacy_post_ephemeral.arn
+}

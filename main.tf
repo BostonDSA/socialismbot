@@ -83,13 +83,15 @@ module "mods" {
 
 # Welcome module for welcoming members to the Slack
 module "welcome" {
-  source      = "./welcome"
-  api_name    = module.socialismbot.api_name
-  kms_key_arn = module.socialismbot.kms_key_arn
-  topic_arn   = module.socialismbot.topic_arn
-  role_name   = module.socialismbot.role_name
-  secret_name = module.socialismbot.secret_name
-  tags        = local.tags
+  source         = "./welcome"
+  api_name       = module.socialismbot.api_name
+  kms_key_arn    = module.socialismbot.kms_key_arn
+  role_name      = module.socialismbot.role_name
+  secret_name    = module.socialismbot.secret_name
+  slackbot_topic = module.socialismbot.topic_name
+  tags           = local.tags
+
+  legacy_post_message_topic = aws_sns_topic.legacy_post_message.name
 }
 
 resource "aws_sns_topic" "legacy_post_message" {

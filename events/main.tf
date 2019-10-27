@@ -190,7 +190,7 @@ resource aws_lambda_permission events_callback {
 }
 
 resource aws_sns_topic events {
-  name = "slack_${var.api_name}_events"
+  name = "slack-${var.api_name}-events"
 }
 
 resource aws_sns_topic_subscription events {

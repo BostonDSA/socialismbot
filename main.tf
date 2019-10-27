@@ -98,11 +98,11 @@ module "welcome" {
 }
 
 resource "aws_sns_topic" "legacy_post_message" {
-  name = "slack_socialismbot_post_message"
+  name = "slack-socialismbot-post-message"
 }
 
 resource "aws_sns_topic" "legacy_post_ephemeral" {
-  name = "slack_socialismbot_post_ephemeral"
+  name = "slack-socialismbot-post-ephemeral"
 }
 
 resource "aws_sns_topic_subscription" "legacy_post_message" {

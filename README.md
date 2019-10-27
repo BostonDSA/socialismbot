@@ -6,15 +6,20 @@ This repo is configured to [deploy automatically](./.travis.yml) on tagged relea
 
 ## Architecture
 
-The archetecture for the Slackbot API is fairly straightforward. All requests are routed asynchronously to to SNS. By convention, payloads are routed to topics corresponding to the specific event:
+The archetecture for the Socialismbot API is fairly straightforward. All requests are routed to an SNS topic, `slack-socialismbot`, to be processed asynchronously. The messages are posted with attributes that help SNS route the message to the proper subscribers. The `type` attribute defines what kind of Slack message it is (`event`, `callback`, `slash` command, etc), while the `id` attribute identifies the message in the context of the type.
 
-- `slack_<your_bot>_event_<event_type>`
-- `slack_<your_bot>_callback_<callback_id>`
-- `slack_<your_bot>_slash_<command>`.
+For example a message with attributes
 
-OAuth requests are authenticated using the Slack client and redirected to the configured redirect URL.
+```javascript
+{
+  "id": "events",
+  "type": "slash"
+}
+```
 
-<img alt="arch" src="https://github.com/amancevice/terraform-aws-slackbot/blob/14.1.0/docs/images/arch.png?raw=true"/>
+indicates that the message is a user-initated slash command `/events`.
+
+<img alt="arch" src="https://github.com/amancevice/slackend/blob/master/docs/aws.png?raw=true"/>
 
 ## Modules
 
@@ -30,24 +35,33 @@ Because we've configured the `base_url` of the module above to `/slack`, our Sla
 - `/slack/events`
 - `/slack/slash/:cmd`
 
-When Slack initiates a request to one of these endpoints callback it will send a POST request to the appropriate endpoint. The app will then forward the request body to a unique SNS topic for each type of message.
+When Slack initiates a request to one of these endpoints callback it will send a POST request to the appropriate endpoint. The app will then forward the request body to the `slack-socialismbot` SNS topic.
 
-For callbacks, the `callback_id` value of the POST body will determine the topic name:
+For callbacks, the `callback_id` value of the POST body will determine the message attribute `id`:
 
-```
-slack_socialismbot_callback_<callback-id>
-```
-
-For events, the [`event_type`](https://api.slack.com/events) value of the POST body will determine the topic name:
-
-```
-slack_socialismbot_event_<event-type>
+```javascript
+{
+  "type": "callback",
+  "id": "<callback-id>"
+}
 ```
 
-For slash commands, the name of the slash command ( ie, the [`cmd`] value of the POST body) will determine the topic name:
+For events, the [`event_type`](https://api.slack.com/events) value of the POST body will determine the message attribute `id`:
 
+```javascript
+{
+  "type": "event",
+  "id": "<event-type>"
+}
 ```
-slack_socialismbot_slash_<cmd-name>
+
+For slash commands, the name of the slash command ( ie, the [`cmd`] value of the POST body) will determine the message attribute `id`:
+
+```javascript
+{
+  "type": "slash",
+  "id": "<cmd-name>"
+}
 ```
 
 ### Events

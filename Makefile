@@ -38,7 +38,7 @@ clean:
 	-docker image rm $(shell awk {print} .docker/*)
 	-rm -rf .docker
 
-clobber:
+clobber: clean
 	-rm -rf $(packages)
 
 $(lockfiles) $(packages): .docker/$(build)@build

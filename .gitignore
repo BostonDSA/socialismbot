@@ -11,6 +11,7 @@
 # backend
 .env
 
+**/.docker/
 **/.terraform/
 **/node_modules/
 *.zip

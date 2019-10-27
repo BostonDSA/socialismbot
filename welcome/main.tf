@@ -1,4 +1,7 @@
 locals {
+  lambda_filename         = "${path.module}/package.zip"
+  lambda_source_code_hash = filebase64sha256(local.lambda_filename)
+
   ask_sc            = "C9Z3M55DG"
   generaldiscussion = "C7M1CCBAQ"
   slack_meta        = "C7F6BQBEW"
@@ -80,22 +83,22 @@ locals {
   slash_response = {
     response_type = "ephemeral"
     attachments = [
-      "${local.welcome}",
-      "${local.channels}",
-      "${local.bot}"
+      local.welcome,
+      local.channels,
+      local.bot,
     ]
   }
 
   event_response = {
     attachments = [
-      "${local.welcome}",
-      "${local.channels}",
-      "${local.bot}"
+      local.welcome,
+      local.channels,
+      local.bot,
     ]
   }
 
   weekly_reminders = {
-    channel = "${local.generaldiscussion}"
+    channel = local.generaldiscussion
     attachments = [
       {
         actions = [
@@ -130,36 +133,30 @@ locals {
   }
 }
 
-data archive_file package {
-  type        = "zip"
-  source_dir  = "${path.module}/"
-  output_path = "${path.module}/package.zip"
-}
-
 data aws_iam_role role {
-  name = "${var.role_name}"
+  name = var.role_name
 }
 
 data aws_sns_topic slackbot {
-  name = "${var.slackbot_topic}"
+  name = var.slackbot_topic
 }
 
 data aws_sns_topic legacy_post_message {
-  name = "${var.legacy_post_message_topic}"
+  name = var.legacy_post_message_topic
 }
 
 module slash_command {
   source         = "amancevice/slackbot-slash-command/aws"
   version        = "~> 13.0"
-  api_name       = "${var.api_name}"
-  kms_key_arn    = "${var.kms_key_arn}"
-  lambda_tags    = "${var.tags}"
-  log_group_tags = "${var.tags}"
-  response       = "${jsonencode(local.slash_response)}"
-  role_name      = "${var.role_name}"
-  secret_name    = "${var.secret_name}"
+  api_name       = var.api_name
+  kms_key_arn    = var.kms_key_arn
+  lambda_tags    = var.tags
+  log_group_tags = var.tags
+  response       = jsonencode(local.slash_response)
+  role_name      = var.role_name
+  secret_name    = var.secret_name
   slash_command  = "welcome"
-  slackbot_topic = "${data.aws_sns_topic.slackbot.name}"
+  slackbot_topic = data.aws_sns_topic.slackbot.name
 }
 
 resource aws_cloudwatch_event_rule weekly_reminders {
@@ -169,47 +166,47 @@ resource aws_cloudwatch_event_rule weekly_reminders {
 }
 
 resource aws_cloudwatch_event_target weekly_reminders {
-  rule  = "${aws_cloudwatch_event_rule.weekly_reminders.name}"
-  arn   = "${data.aws_sns_topic.legacy_post_message.arn}"
-  input = "${jsonencode(local.weekly_reminders)}"
+  rule  = aws_cloudwatch_event_rule.weekly_reminders.name
+  arn   = data.aws_sns_topic.legacy_post_message.arn
+  input = jsonencode(local.weekly_reminders)
 }
 
 resource aws_cloudwatch_log_group callback_logs {
   name              = "/aws/lambda/${aws_lambda_function.team_join.function_name}"
   retention_in_days = 30
-  tags              = "${var.tags}"
+  tags              = var.tags
 }
 
 resource aws_lambda_function team_join {
   description      = "Publish Google Calendar events to Slack"
-  filename         = "${data.archive_file.package.output_path}"
+  filename         = local.lambda_filename
   function_name    = "slack-socialismbot-event-team-join"
   handler          = "index.handler"
   memory_size      = 1024
-  role             = "${data.aws_iam_role.role.arn}"
+  role             = data.aws_iam_role.role.arn
   runtime          = "nodejs10.x"
-  source_code_hash = "${data.archive_file.package.output_base64sha256}"
-  tags             = "${var.tags}"
+  source_code_hash = local.lambda_source_code_hash
+  tags             = var.tags
   timeout          = 3
 
   environment {
     variables = {
-      SLACK_SECRET = "${var.secret_name}"
-      WELCOME      = "${jsonencode(local.event_response)}"
+      SLACK_SECRET = var.secret_name
+      WELCOME      = jsonencode(local.event_response)
     }
   }
 }
 
 resource aws_lambda_permission team_join {
   action        = "lambda:InvokeFunction"
-  function_name = "${aws_lambda_function.team_join.function_name}"
+  function_name = aws_lambda_function.team_join.function_name
   principal     = "sns.amazonaws.com"
-  source_arn    = "${data.aws_sns_topic.slackbot.arn}"
+  source_arn    = data.aws_sns_topic.slackbot.arn
 }
 
 resource aws_sns_topic_subscription team_join {
-  endpoint      = "${aws_lambda_function.team_join.arn}"
+  endpoint      = aws_lambda_function.team_join.arn
   protocol      = "lambda"
-  topic_arn     = "${data.aws_sns_topic.slackbot.arn}"
+  topic_arn     = data.aws_sns_topic.slackbot.arn
   filter_policy = jsonencode(local.team_join_filter_policy)
 }

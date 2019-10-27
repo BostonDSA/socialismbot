@@ -1,0 +1,14 @@
+*
+!*.tf
+!events/*.js
+!events/package*.json
+!events/*.tf
+!invite/*.js
+!invite/package*.json
+!invite/*.tf
+!mods/*.js
+!mods/package*.json
+!mods/*.tf
+!welcome/*.js
+!welcome/package*.json
+!welcome/*.tf

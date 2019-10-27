@@ -1,20 +1,11 @@
 language: node_js
-services:
-  - docker
-cache:
-  directories:
-    - "${HOME}/events/node_modules"
-    - "${HOME}/mods/node_modules"
-before_install:
-  - export TF_VAR_release="${TRAVIS_TAG:-$(date +%Y.%-m.%-d)}"
-  - export TF_VAR_repo="$(git config --get remote.origin.url)"
-  - docker-compose run terraform init
-install:
-  - docker-compose run build
-jobs:
-  include:
-    - stage: test
-      script: docker-compose run terraform plan
-    - stage: deploy
-      script: docker-compose run terraform apply -auto-approve
-      if: tag IS present
+node_js:
+- "10"
+script:
+- make plan
+deploy:
+- provider: script
+  script: make apply
+  on:
+    repo: BostonDSA/socialismbot
+    tags: true

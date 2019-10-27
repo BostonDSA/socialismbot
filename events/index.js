@@ -1,7 +1,7 @@
 'use strict';
 const AWS           = require('aws-sdk');
 const moment        = require('moment-timezone');
-const { WebClient } = require('@slack/client');
+const { WebClient } = require('@slack/web-api');
 const { google }    = require('googleapis');
 
 const FACEBOOK_PAGE_ID            = process.env.FACEBOOK_PAGE_ID;

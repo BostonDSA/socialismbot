@@ -1,4 +1,9 @@
 locals {
+  filter_policy = {
+    id   = ["events", "events_post"]
+    type = ["callback"]
+  }
+
   payload = {
     callback_id = "events_post"
 
@@ -91,6 +96,10 @@ data aws_iam_role role {
   name = "${var.role_name}"
 }
 
+data aws_sns_topic slackbot {
+  name = "${var.slackbot_topic}"
+}
+
 data terraform_remote_state facebook_gcal_sync {
   backend = "s3"
 
@@ -104,7 +113,8 @@ data terraform_remote_state facebook_gcal_sync {
 
 module slash_command {
   source         = "amancevice/slackbot-slash-command/aws"
-  version        = "13.0.0"
+  version        = "~> 13.0"
+  slash_command  = "events"
   api_name       = "${var.api_name}"
   kms_key_arn    = "${var.kms_key_arn}"
   lambda_tags    = "${var.tags}"
@@ -112,8 +122,7 @@ module slash_command {
   response       = "${jsonencode(local.response)}"
   role_name      = "${var.role_name}"
   secret_name    = "${var.secret_name}"
-  slash_command  = "events"
-  slackbot_topic = "${aws_sns_topic.slash_events.arn}"
+  slackbot_topic = "${data.aws_sns_topic.slackbot.name}"
 }
 
 resource aws_cloudwatch_event_rule callback_rule {
@@ -124,7 +133,7 @@ resource aws_cloudwatch_event_rule callback_rule {
 
 resource aws_cloudwatch_event_target callback_target {
   rule  = "${aws_cloudwatch_event_rule.callback_rule.name}"
-  arn   = "${aws_sns_topic.events_post.arn}"
+  arn   = "${aws_sns_topic.events.arn}"
   input = "${jsonencode("${local.payload}")}"
 }
 
@@ -150,7 +159,7 @@ resource aws_lambda_function callback {
   runtime          = "nodejs10.x"
   source_code_hash = "${data.archive_file.package.output_base64sha256}"
   tags             = "${var.tags}"
-  timeout          = 3
+  timeout          = 30
 
   environment {
     variables = {
@@ -166,13 +175,6 @@ resource aws_lambda_function callback {
   }
 }
 
-resource aws_lambda_permission callback_events {
-  action        = "lambda:InvokeFunction"
-  function_name = "${aws_lambda_function.callback.function_name}"
-  principal     = "sns.amazonaws.com"
-  source_arn    = "${aws_sns_topic.events.arn}"
-}
-
 resource aws_lambda_permission events {
   action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.callback.function_name}"
@@ -180,23 +182,15 @@ resource aws_lambda_permission events {
   source_arn    = "${aws_sns_topic.events.arn}"
 }
 
-resource aws_lambda_permission events_post {
+resource aws_lambda_permission events_callback {
   action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.callback.function_name}"
   principal     = "sns.amazonaws.com"
-  source_arn    = "${aws_sns_topic.events_post.arn}"
+  source_arn    = "${data.aws_sns_topic.slackbot.arn}"
 }
 
 resource aws_sns_topic events {
-  name = "slack_${var.api_name}_callback_events"
-}
-
-resource aws_sns_topic events_post {
-  name = "slack_${var.api_name}_callback_events_post"
-}
-
-resource aws_sns_topic slash_events {
-  name = "slack_${var.api_name}_slash_events"
+  name = "slack_${var.api_name}_events"
 }
 
 resource aws_sns_topic_subscription events {
@@ -205,8 +199,9 @@ resource aws_sns_topic_subscription events {
   topic_arn = "${aws_sns_topic.events.arn}"
 }
 
-resource aws_sns_topic_subscription events_post {
-  endpoint  = "${aws_lambda_function.callback.arn}"
-  protocol  = "lambda"
-  topic_arn = "${aws_sns_topic.events_post.arn}"
+resource aws_sns_topic_subscription events_callback {
+  endpoint      = "${aws_lambda_function.callback.arn}"
+  protocol      = "lambda"
+  topic_arn     = "${data.aws_sns_topic.slackbot.arn}"
+  filter_policy = jsonencode(local.filter_policy)
 }

@@ -51,13 +51,14 @@ module "socialismbot" {
 
 # Events module for posting daily events
 module "events" {
-  source      = "./events"
-  api_name    = module.socialismbot.api_name
-  kms_key_arn = module.socialismbot.kms_key_arn
-  role_name   = module.socialismbot.role_name
-  secret_name = module.socialismbot.secret_name
-  channel     = local.channel_events
-  tags        = local.tags
+  source         = "./events"
+  api_name       = module.socialismbot.api_name
+  kms_key_arn    = module.socialismbot.kms_key_arn
+  role_name      = module.socialismbot.role_name
+  slackbot_topic = module.socialismbot.topic_name
+  secret_name    = module.socialismbot.secret_name
+  channel        = local.channel_events
+  tags           = local.tags
 }
 
 # Invite members to Slack

@@ -1,25 +1,34 @@
+terraform {
+  backend "s3" {
+    bucket = "terraform.bostondsa.org"
+    key    = "socialismbot.tfstate"
+    region = "us-east-1"
+  }
+
+  required_version = ">= 0.12"
+}
+
 provider "archive" {
   version = "~> 1.1"
 }
 
 provider "aws" {
-  access_key = var.aws_access_key_id
-  profile    = var.aws_profile
-  region     = var.aws_region
-  secret_key = var.aws_secret_access_key
-  version    = "~> 2.2"
+  version = "~> 2.7"
 }
 
-# Useful Slack chanel IDs
 locals {
+  release = var.release
+  repo    = "https://github.com/BostonDSA/socialismbot.git"
+
+  # Useful Slack chanel IDs
   channel_events  = "C7F7Z0WJG"
   channel_mods    = "G7FAX48KX"
   channel_testing = "GB1SLKKL7"
 
   tags = {
     App     = "socialismbot"
-    Release = var.release
-    Repo    = var.repo
+    Release = local.release
+    Repo    = local.repo
   }
 }
 
@@ -115,4 +124,28 @@ resource "aws_sns_topic_subscription" "legacy_post_ephemeral" {
   endpoint  = module.socialismbot.lambda_post_ephemeral_arn
   protocol  = "lambda"
   topic_arn = aws_sns_topic.legacy_post_ephemeral.arn
+}
+
+output "api_name" {
+  description = "REST API Name."
+  value       = module.socialismbot.api_name
+}
+
+output "role_name" {
+  description = "Name of basic execution role for Slackbot lambdas."
+  value       = module.socialismbot.role_name
+}
+
+output "post_message_topic_arn" {
+  description = "Slackbot post message SNS topic ARN."
+  value       = module.socialismbot.topic_arn
+}
+
+output "post_ephemeral_topic_arn" {
+  description = "Slackbot post ephemeral SNS topic ARN."
+  value       = module.socialismbot.topic_arn
+}
+
+variable "release" {
+  description = "Release tag."
 }

@@ -1,4 +1,7 @@
 locals {
+  lambda_filename         = "${path.module}/package.zip"
+  lambda_source_code_hash = filebase64sha256(local.lambda_filename)
+
   filter_policy = {
     id   = ["events", "events_post"]
     type = ["callback"]
@@ -8,7 +11,7 @@ locals {
     callback_id = "events_post"
 
     submission = {
-      conversation = "${var.channel}"
+      conversation = var.channel
     }
   }
 
@@ -58,12 +61,6 @@ locals {
   }
 }
 
-data archive_file package {
-  type        = "zip"
-  source_dir  = "${path.module}/"
-  output_path = "${path.module}/package.zip"
-}
-
 data aws_kms_key key {
   key_id = "alias/aws/secretsmanager"
 }
@@ -76,28 +73,28 @@ data aws_iam_policy_document events {
   statement {
     sid       = "DecryptKmsKey"
     actions   = ["kms:Decrypt"]
-    resources = ["${data.aws_kms_key.key.arn}"]
+    resources = [data.aws_kms_key.key.arn]
   }
 
   statement {
     sid       = "GetSecretValue"
     actions   = ["secretsmanager:GetSecretValue"]
-    resources = ["${data.aws_secretsmanager_secret.google.arn}"]
+    resources = [data.aws_secretsmanager_secret.google.arn]
   }
 
   statement {
     sid       = "InvokeFunction"
     actions   = ["lambda:InvokeFunction"]
-    resources = ["${data.terraform_remote_state.facebook_gcal_sync.outputs.lambda_function_arn}"]
+    resources = [data.terraform_remote_state.facebook_gcal_sync.outputs.lambda_function_arn]
   }
 }
 
 data aws_iam_role role {
-  name = "${var.role_name}"
+  name = var.role_name
 }
 
 data aws_sns_topic slackbot {
-  name = "${var.slackbot_topic}"
+  name = var.slackbot_topic
 }
 
 data terraform_remote_state facebook_gcal_sync {
@@ -115,14 +112,14 @@ module slash_command {
   source         = "amancevice/slackbot-slash-command/aws"
   version        = "~> 13.0"
   slash_command  = "events"
-  api_name       = "${var.api_name}"
-  kms_key_arn    = "${var.kms_key_arn}"
-  lambda_tags    = "${var.tags}"
-  log_group_tags = "${var.tags}"
-  response       = "${jsonencode(local.response)}"
-  role_name      = "${var.role_name}"
-  secret_name    = "${var.secret_name}"
-  slackbot_topic = "${data.aws_sns_topic.slackbot.name}"
+  api_name       = var.api_name
+  kms_key_arn    = var.kms_key_arn
+  lambda_tags    = var.tags
+  log_group_tags = var.tags
+  response       = jsonencode(local.response)
+  role_name      = var.role_name
+  secret_name    = var.secret_name
+  slackbot_topic = data.aws_sns_topic.slackbot.name
 }
 
 resource aws_cloudwatch_event_rule callback_rule {
@@ -132,39 +129,39 @@ resource aws_cloudwatch_event_rule callback_rule {
 }
 
 resource aws_cloudwatch_event_target callback_target {
-  rule  = "${aws_cloudwatch_event_rule.callback_rule.name}"
-  arn   = "${aws_sns_topic.events.arn}"
-  input = "${jsonencode("${local.payload}")}"
+  rule  = aws_cloudwatch_event_rule.callback_rule.name
+  arn   = aws_sns_topic.events.arn
+  input = jsonencode(local.payload)
 }
 
 resource aws_cloudwatch_log_group callback_logs {
   name              = "/aws/lambda/${aws_lambda_function.callback.function_name}"
   retention_in_days = 30
-  tags              = "${var.tags}"
+  tags              = var.tags
 }
 
 resource aws_iam_role_policy events {
   name   = "events"
-  policy = "${data.aws_iam_policy_document.events.json}"
-  role   = "${data.aws_iam_role.role.id}"
+  policy = data.aws_iam_policy_document.events.json
+  role   = data.aws_iam_role.role.id
 }
 
 resource aws_lambda_function callback {
   description      = "Publish Google Calendar events to Slack"
-  filename         = "${data.archive_file.package.output_path}"
+  filename         = local.lambda_filename
   function_name    = "slack-socialismbot-callback-events"
   handler          = "index.handler"
   memory_size      = 1024
-  role             = "${data.aws_iam_role.role.arn}"
+  role             = data.aws_iam_role.role.arn
   runtime          = "nodejs10.x"
-  source_code_hash = "${data.archive_file.package.output_base64sha256}"
-  tags             = "${var.tags}"
+  source_code_hash = local.lambda_source_code_hash
+  tags             = var.tags
   timeout          = 30
 
   environment {
     variables = {
       FACEBOOK_PAGE_ID            = "BostonDSA"
-      FACEBOOK_SYNC_FUNCTION_NAME = "${data.terraform_remote_state.facebook_gcal_sync.outputs.lambda_function_name}"
+      FACEBOOK_SYNC_FUNCTION_NAME = data.terraform_remote_state.facebook_gcal_sync.outputs.lambda_function_name
       GOOGLE_CALENDAR_ID          = "u21m8kt8bb1lflp8jpmd317iik@group.calendar.google.com"
       GOOGLE_SECRET               = "google/socialismbot"
       HELP_URL                    = "https://github.com/BostonDSA/socialismbot/blob/master/slash/events/docs/help.md#help"
@@ -177,16 +174,16 @@ resource aws_lambda_function callback {
 
 resource aws_lambda_permission events {
   action        = "lambda:InvokeFunction"
-  function_name = "${aws_lambda_function.callback.function_name}"
+  function_name = aws_lambda_function.callback.function_name
   principal     = "sns.amazonaws.com"
-  source_arn    = "${aws_sns_topic.events.arn}"
+  source_arn    = aws_sns_topic.events.arn
 }
 
 resource aws_lambda_permission events_callback {
   action        = "lambda:InvokeFunction"
-  function_name = "${aws_lambda_function.callback.function_name}"
+  function_name = aws_lambda_function.callback.function_name
   principal     = "sns.amazonaws.com"
-  source_arn    = "${data.aws_sns_topic.slackbot.arn}"
+  source_arn    = data.aws_sns_topic.slackbot.arn
 }
 
 resource aws_sns_topic events {
@@ -194,14 +191,14 @@ resource aws_sns_topic events {
 }
 
 resource aws_sns_topic_subscription events {
-  endpoint  = "${aws_lambda_function.callback.arn}"
+  endpoint  = aws_lambda_function.callback.arn
   protocol  = "lambda"
-  topic_arn = "${aws_sns_topic.events.arn}"
+  topic_arn = aws_sns_topic.events.arn
 }
 
 resource aws_sns_topic_subscription events_callback {
-  endpoint      = "${aws_lambda_function.callback.arn}"
+  endpoint      = aws_lambda_function.callback.arn
   protocol      = "lambda"
-  topic_arn     = "${data.aws_sns_topic.slackbot.arn}"
+  topic_arn     = data.aws_sns_topic.slackbot.arn
   filter_policy = jsonencode(local.filter_policy)
 }

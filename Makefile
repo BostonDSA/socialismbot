@@ -7,7 +7,7 @@ packages  := $(foreach module,$(modules),$(module)/package.zip)
 lockfiles := $(foreach module,$(modules),$(module)/package-lock.json)
 shells    := $(foreach stage,$(stages),shell@$(stage))
 
-.PHONY: all apply clean $(stages) $(shells)
+.PHONY: all apply clean clobber $(stages) $(shells)
 
 all: $(lockfiles) $(packages)
 
@@ -36,7 +36,10 @@ apply: .docker/$(build)@plan
 
 clean:
 	-docker image rm $(shell awk {print} .docker/*)
-	-rm -rf .docker $(packages)
+	-rm -rf .docker
+
+clobber:
+	-rm -rf $(packages)
 
 $(lockfiles) $(packages): .docker/$(build)@build
 	docker run --rm \

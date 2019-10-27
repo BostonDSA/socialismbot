@@ -8,10 +8,6 @@ terraform {
   required_version = ">= 0.12"
 }
 
-provider "archive" {
-  version = "~> 1.1"
-}
-
 provider "aws" {
   version = "~> 2.7"
 }

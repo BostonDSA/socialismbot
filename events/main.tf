@@ -1,12 +1,18 @@
 locals {
-  payload {
+  filter_policy = {
+    id   = ["events", "events_post"]
+    type = ["callback"]
+  }
+
+  payload = {
     callback_id = "events_post"
-    submission {
+
+    submission = {
       conversation = "${var.channel}"
     }
   }
 
-  response {
+  response = {
     attachments = [
       {
         callback_id = "events"
@@ -14,6 +20,7 @@ locals {
         fallback    = "Chapter Events"
         mrkdwn_in   = ["text"]
         text        = "Post today's events to a conversation you are in.\nOr copy <https://facebook.com/BostonDSA|facebook> events to <https://calendar.google.com/calendar/r?cid=dTIxbThrdDhiYjFsZmxwOGpwbWQzMTdpaWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ|Google Calendar> _(this auto-runs hourly)_."
+
         actions = [
           {
             name  = "post"
@@ -26,7 +33,7 @@ locals {
             text  = "Sync facebook"
             type  = "button"
             value = "sync"
-          }
+          },
         ]
       },
       {
@@ -36,16 +43,17 @@ locals {
         footer      = "<https://github.com/BostonDSA/socialismbot|BostonDSA/socialismbot>"
         footer_icon = "https://assets-cdn.github.com/favicon.ico"
         mrkdwn_in   = ["text"]
-        text        = "_Have you ever missed a Boston DSA event because you didn't hear about it until it was too late? Subscribe to this calendar to receive push notifications about upcoming DSA events sent directly to your mobile device._",
+        text        = "_Have you ever missed a Boston DSA event because you didn't hear about it until it was too late? Subscribe to this calendar to receive push notifications about upcoming DSA events sent directly to your mobile device._"
+
         actions = [
           {
-            type = "button",
-            name = "subscribe",
-            text = "Subscribe",
+            type = "button"
+            name = "subscribe"
+            text = "Subscribe"
             url  = "https://calendars.dsausa.org/u21m8kt8bb1lflp8jpmd317iik%40group.calendar.google.com"
-          }
+          },
         ]
-      }
+      },
     ]
   }
 }
@@ -80,7 +88,7 @@ data aws_iam_policy_document events {
   statement {
     sid       = "InvokeFunction"
     actions   = ["lambda:InvokeFunction"]
-    resources = ["${data.terraform_remote_state.facebook_gcal_sync.lambda_function_arn}"]
+    resources = ["${data.terraform_remote_state.facebook_gcal_sync.outputs.lambda_function_arn}"]
   }
 }
 
@@ -88,9 +96,14 @@ data aws_iam_role role {
   name = "${var.role_name}"
 }
 
+data aws_sns_topic slackbot {
+  name = "${var.slackbot_topic}"
+}
+
 data terraform_remote_state facebook_gcal_sync {
   backend = "s3"
-  config {
+
+  config = {
     bucket  = "terraform.bostondsa.org"
     key     = "facebook-gcal-sync.tfstate"
     region  = "us-east-1"
@@ -100,7 +113,8 @@ data terraform_remote_state facebook_gcal_sync {
 
 module slash_command {
   source         = "amancevice/slackbot-slash-command/aws"
-  version        = "11.0.0"
+  version        = "~> 13.0"
+  slash_command  = "events"
   api_name       = "${var.api_name}"
   kms_key_arn    = "${var.kms_key_arn}"
   lambda_tags    = "${var.tags}"
@@ -108,7 +122,7 @@ module slash_command {
   response       = "${jsonencode(local.response)}"
   role_name      = "${var.role_name}"
   secret_name    = "${var.secret_name}"
-  slash_command  = "events"
+  slackbot_topic = "${data.aws_sns_topic.slackbot.name}"
 }
 
 resource aws_cloudwatch_event_rule callback_rule {
@@ -119,7 +133,7 @@ resource aws_cloudwatch_event_rule callback_rule {
 
 resource aws_cloudwatch_event_target callback_target {
   rule  = "${aws_cloudwatch_event_rule.callback_rule.name}"
-  arn   = "${aws_sns_topic.events_post.arn}"
+  arn   = "${aws_sns_topic.events.arn}"
   input = "${jsonencode("${local.payload}")}"
 }
 
@@ -145,12 +159,12 @@ resource aws_lambda_function callback {
   runtime          = "nodejs10.x"
   source_code_hash = "${data.archive_file.package.output_base64sha256}"
   tags             = "${var.tags}"
-  timeout          = 3
+  timeout          = 30
 
   environment {
-    variables {
+    variables = {
       FACEBOOK_PAGE_ID            = "BostonDSA"
-      FACEBOOK_SYNC_FUNCTION_NAME = "${data.terraform_remote_state.facebook_gcal_sync.lambda_function_name}"
+      FACEBOOK_SYNC_FUNCTION_NAME = "${data.terraform_remote_state.facebook_gcal_sync.outputs.lambda_function_name}"
       GOOGLE_CALENDAR_ID          = "u21m8kt8bb1lflp8jpmd317iik@group.calendar.google.com"
       GOOGLE_SECRET               = "google/socialismbot"
       HELP_URL                    = "https://github.com/BostonDSA/socialismbot/blob/master/slash/events/docs/help.md#help"
@@ -161,13 +175,6 @@ resource aws_lambda_function callback {
   }
 }
 
-resource aws_lambda_permission callback_events {
-  action        = "lambda:InvokeFunction"
-  function_name = "${aws_lambda_function.callback.function_name}"
-  principal     = "sns.amazonaws.com"
-  source_arn    = "${aws_sns_topic.events.arn}"
-}
-
 resource aws_lambda_permission events {
   action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.callback.function_name}"
@@ -175,19 +182,15 @@ resource aws_lambda_permission events {
   source_arn    = "${aws_sns_topic.events.arn}"
 }
 
-resource aws_lambda_permission events_post {
+resource aws_lambda_permission events_callback {
   action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.callback.function_name}"
   principal     = "sns.amazonaws.com"
-  source_arn    = "${aws_sns_topic.events_post.arn}"
+  source_arn    = "${data.aws_sns_topic.slackbot.arn}"
 }
 
 resource aws_sns_topic events {
-  name = "slack_${var.api_name}_callback_events"
-}
-
-resource aws_sns_topic events_post {
-  name = "slack_${var.api_name}_callback_events_post"
+  name = "slack-${var.api_name}-events"
 }
 
 resource aws_sns_topic_subscription events {
@@ -196,8 +199,9 @@ resource aws_sns_topic_subscription events {
   topic_arn = "${aws_sns_topic.events.arn}"
 }
 
-resource aws_sns_topic_subscription events_post {
-  endpoint  = "${aws_lambda_function.callback.arn}"
-  protocol  = "lambda"
-  topic_arn = "${aws_sns_topic.events_post.arn}"
+resource aws_sns_topic_subscription events_callback {
+  endpoint      = "${aws_lambda_function.callback.arn}"
+  protocol      = "lambda"
+  topic_arn     = "${data.aws_sns_topic.slackbot.arn}"
+  filter_policy = jsonencode(local.filter_policy)
 }

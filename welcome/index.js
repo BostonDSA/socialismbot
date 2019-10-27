@@ -1,10 +1,9 @@
 const AWS           = require('aws-sdk');
-const { WebClient } = require('@slack/client');
+const { WebClient } = require('@slack/web-api');
 
 const SLACK_SECRET = process.env.SLACK_SECRET;
 const WELCOME      = process.env.WELCOME;
 
-const sns            = new AWS.SNS();
 const secretsmanager = new AWS.SecretsManager();
 
 let slack;

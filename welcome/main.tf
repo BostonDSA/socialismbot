@@ -5,7 +5,12 @@ locals {
   socialismbot      = "UAJGYQCQ1"
   testing           = "GB1SLKKL7"
 
-  welcome {
+  team_join_filter_policy = {
+    id   = ["team_join"]
+    type = ["event"]
+  }
+
+  welcome = {
     actions = [
       {
         text = "Learn More"
@@ -33,7 +38,7 @@ locals {
     text      = "Take a moment to review the <https://www.dsausa.org/respectful_discussion|DSA Guidelines for Respectful Discussion>.\nMembers should adhere to the <https://bit.ly/BDSACode|Boston DSA Code of Conduct> at all times.\nFor full details, consult the <https://drive.google.com/file/d/0B6OdCRb_vSGzeTV4akFSRHF0NWs/view|Boston DSA Slack Guidelines>"
   }
 
-  channels {
+  channels = {
     actions = [
       {
         text = "Learn More"
@@ -56,7 +61,7 @@ locals {
     pretext   = "*:tv: Slack Channels*"
   }
 
-  bot {
+  bot = {
     actions = [
       {
         text = "Learn More"
@@ -72,7 +77,7 @@ locals {
     text        = "<@${local.socialismbot}> is Boston DSA's beautiful Marxist robot and he's here to help you!\nType `/welcome` in any chat to see this message again.\nVisit members.bostondsa.org for more member onboarding resources!"
   }
 
-  slash_response {
+  slash_response = {
     response_type = "ephemeral"
     attachments = [
       "${local.welcome}",
@@ -81,7 +86,7 @@ locals {
     ]
   }
 
-  event_response {
+  event_response = {
     attachments = [
       "${local.welcome}",
       "${local.channels}",
@@ -89,7 +94,7 @@ locals {
     ]
   }
 
-  weekly_reminders {
+  weekly_reminders = {
     channel = "${local.generaldiscussion}"
     attachments = [
       {
@@ -135,9 +140,17 @@ data aws_iam_role role {
   name = "${var.role_name}"
 }
 
+data aws_sns_topic slackbot {
+  name = "${var.slackbot_topic}"
+}
+
+data aws_sns_topic legacy_post_message {
+  name = "${var.legacy_post_message_topic}"
+}
+
 module slash_command {
   source         = "amancevice/slackbot-slash-command/aws"
-  version        = "11.0.0"
+  version        = "~> 13.0"
   api_name       = "${var.api_name}"
   kms_key_arn    = "${var.kms_key_arn}"
   lambda_tags    = "${var.tags}"
@@ -146,6 +159,7 @@ module slash_command {
   role_name      = "${var.role_name}"
   secret_name    = "${var.secret_name}"
   slash_command  = "welcome"
+  slackbot_topic = "${data.aws_sns_topic.slackbot.name}"
 }
 
 resource aws_cloudwatch_event_rule weekly_reminders {
@@ -156,8 +170,8 @@ resource aws_cloudwatch_event_rule weekly_reminders {
 
 resource aws_cloudwatch_event_target weekly_reminders {
   rule  = "${aws_cloudwatch_event_rule.weekly_reminders.name}"
-  arn   = "${var.post_message_topic_arn}"
-  input = "${jsonencode("${local.weekly_reminders}")}"
+  arn   = "${data.aws_sns_topic.legacy_post_message.arn}"
+  input = "${jsonencode(local.weekly_reminders)}"
 }
 
 resource aws_cloudwatch_log_group callback_logs {
@@ -179,7 +193,7 @@ resource aws_lambda_function team_join {
   timeout          = 3
 
   environment {
-    variables {
+    variables = {
       SLACK_SECRET = "${var.secret_name}"
       WELCOME      = "${jsonencode(local.event_response)}"
     }
@@ -190,15 +204,12 @@ resource aws_lambda_permission team_join {
   action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.team_join.function_name}"
   principal     = "sns.amazonaws.com"
-  source_arn    = "${aws_sns_topic.team_join.arn}"
-}
-
-resource aws_sns_topic team_join {
-  name = "slack_${var.api_name}_event_team_join"
+  source_arn    = "${data.aws_sns_topic.slackbot.arn}"
 }
 
 resource aws_sns_topic_subscription team_join {
-  endpoint  = "${aws_lambda_function.team_join.arn}"
-  protocol  = "lambda"
-  topic_arn = "${aws_sns_topic.team_join.arn}"
+  endpoint      = "${aws_lambda_function.team_join.arn}"
+  protocol      = "lambda"
+  topic_arn     = "${data.aws_sns_topic.slackbot.arn}"
+  filter_policy = jsonencode(local.team_join_filter_policy)
 }

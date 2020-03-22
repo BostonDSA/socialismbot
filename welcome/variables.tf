@@ -20,7 +20,7 @@ variable slackbot_topic {
 
 variable tags {
   description = "Lambda function tags."
-  type        = "map"
+  type        = map(string)
   default     = {}
 }
 

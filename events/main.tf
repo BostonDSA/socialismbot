@@ -85,7 +85,7 @@ data aws_iam_policy_document events {
   statement {
     sid       = "InvokeFunction"
     actions   = ["lambda:InvokeFunction"]
-    resources = [data.terraform_remote_state.facebook_gcal_sync.outputs.lambda_function_arn]
+    resources = [data.aws_lambda_function.facebook_gcal_sync.arn]
   }
 }
 
@@ -97,15 +97,8 @@ data aws_sns_topic slackbot {
   name = var.slackbot_topic
 }
 
-data terraform_remote_state facebook_gcal_sync {
-  backend = "s3"
-
-  config = {
-    bucket  = "terraform.bostondsa.org"
-    key     = "facebook-gcal-sync.tfstate"
-    region  = "us-east-1"
-    profile = "bdsa"
-  }
+data aws_lambda_function facebook_gcal_sync {
+  function_name = "facebook-gcal-sync"
 }
 
 module slash_command {
@@ -161,7 +154,7 @@ resource aws_lambda_function callback {
   environment {
     variables = {
       FACEBOOK_PAGE_ID            = "BostonDSA"
-      FACEBOOK_SYNC_FUNCTION_NAME = data.terraform_remote_state.facebook_gcal_sync.outputs.lambda_function_name
+      FACEBOOK_SYNC_FUNCTION_NAME = data.aws_lambda_function.facebook_gcal_sync.function_name
       GOOGLE_CALENDAR_ID          = "u21m8kt8bb1lflp8jpmd317iik@group.calendar.google.com"
       GOOGLE_SECRET               = "google/socialismbot"
       HELP_URL                    = "https://github.com/BostonDSA/socialismbot/blob/master/slash/events/docs/help.md#help"

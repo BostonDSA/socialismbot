@@ -24,6 +24,6 @@ variable slackbot_topic {
 
 variable tags {
   description = "AWS resource tags."
-  type        = "map"
+  type        = map(string)
   default     = {}
 }

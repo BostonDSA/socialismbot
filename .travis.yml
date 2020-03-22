@@ -1,11 +1,14 @@
 language: node_js
 node_js:
-- "10"
+- "12"
+install:
+- make
 script:
 - make plan
 deploy:
 - provider: script
   script: make apply
+  skip_cleanup: true
   on:
     repo: BostonDSA/socialismbot
     tags: true

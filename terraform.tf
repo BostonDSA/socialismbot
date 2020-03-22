@@ -13,8 +13,7 @@ provider "aws" {
 }
 
 locals {
-  release = var.release
-  repo    = "https://github.com/BostonDSA/socialismbot.git"
+  repo = "https://github.com/BostonDSA/socialismbot.git"
 
   # Useful Slack chanel IDs
   channel_events  = "C7F7Z0WJG"
@@ -23,7 +22,7 @@ locals {
 
   tags = {
     App     = "socialismbot"
-    Release = local.release
+    Version = var.VERSION
     Repo    = local.repo
   }
 }
@@ -40,9 +39,9 @@ data "terraform_remote_state" "secrets" {
 }
 
 # Core slackbot app
-module "socialismbot" {
+module socialismbot {
   source         = "amancevice/slackbot/aws"
-  version        = "~> 15.0"
+  version        = "~> 16.0"
   api_name       = "socialismbot"
   api_stage_name = "v1"
   app_name       = "slack-socialismbot"
@@ -55,8 +54,9 @@ module "socialismbot" {
 }
 
 # Events module for posting daily events
-module "events" {
+module events {
   source         = "./events"
+  package        = "./dist/events.zip"
   api_name       = module.socialismbot.api_name
   kms_key_arn    = module.socialismbot.kms_key_arn
   role_name      = module.socialismbot.role_name
@@ -67,8 +67,9 @@ module "events" {
 }
 
 # Invite members to Slack
-module "invite" {
+module invite {
   source         = "./invite"
+  package        = "./dist/invite.zip"
   api_name       = module.socialismbot.api_name
   kms_key_arn    = module.socialismbot.kms_key_arn
   role_name      = module.socialismbot.role_name
@@ -78,8 +79,9 @@ module "invite" {
 }
 
 # Moderator module for allowing members to report messages to mods
-module "mods" {
+module mods {
   source         = "./mods"
+  package        = "./dist/mods.zip"
   api_name       = module.socialismbot.api_name
   kms_key_arn    = module.socialismbot.kms_key_arn
   role_name      = module.socialismbot.role_name
@@ -90,8 +92,9 @@ module "mods" {
 }
 
 # Welcome module for welcoming members to the Slack
-module "welcome" {
+module welcome {
   source         = "./welcome"
+  package        = "./dist/welcome.zip"
   api_name       = module.socialismbot.api_name
   kms_key_arn    = module.socialismbot.kms_key_arn
   role_name      = module.socialismbot.role_name
@@ -102,46 +105,46 @@ module "welcome" {
   legacy_post_message_topic = aws_sns_topic.legacy_post_message.name
 }
 
-resource "aws_sns_topic" "legacy_post_message" {
+resource aws_sns_topic legacy_post_message {
   name = "slack-socialismbot-post-message"
 }
 
-resource "aws_sns_topic" "legacy_post_ephemeral" {
+resource aws_sns_topic legacy_post_ephemeral {
   name = "slack-socialismbot-post-ephemeral"
 }
 
-resource "aws_sns_topic_subscription" "legacy_post_message" {
+resource aws_sns_topic_subscription legacy_post_message {
   endpoint  = module.socialismbot.lambda_post_message_arn
   protocol  = "lambda"
   topic_arn = aws_sns_topic.legacy_post_message.arn
 }
 
-resource "aws_sns_topic_subscription" "legacy_post_ephemeral" {
+resource aws_sns_topic_subscription legacy_post_ephemeral {
   endpoint  = module.socialismbot.lambda_post_ephemeral_arn
   protocol  = "lambda"
   topic_arn = aws_sns_topic.legacy_post_ephemeral.arn
 }
 
-output "api_name" {
-  description = "REST API Name."
+output api_name {
+  description = "REST API Name"
   value       = module.socialismbot.api_name
 }
 
-output "role_name" {
-  description = "Name of basic execution role for Slackbot lambdas."
+output role_name {
+  description = "Name of basic execution role for Slackbot lambdas"
   value       = module.socialismbot.role_name
 }
 
-output "post_message_topic_arn" {
-  description = "Slackbot post message SNS topic ARN."
+output post_message_topic_arn {
+  description = "Slackbot post message SNS topic ARN"
   value       = module.socialismbot.topic_arn
 }
 
-output "post_ephemeral_topic_arn" {
-  description = "Slackbot post ephemeral SNS topic ARN."
+output post_ephemeral_topic_arn {
+  description = "Slackbot post ephemeral SNS topic ARN"
   value       = module.socialismbot.topic_arn
 }
 
-variable "release" {
-  description = "Release tag."
+variable VERSION {
+  description = "Release tag name"
 }

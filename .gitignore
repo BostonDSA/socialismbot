@@ -13,5 +13,6 @@
 
 **/.docker/
 **/.terraform/
+**/dist/
 **/node_modules/
 *.zip

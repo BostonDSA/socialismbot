@@ -1,6 +1,6 @@
 locals {
-  lambda_filename         = "${path.module}/package.zip"
-  lambda_source_code_hash = filebase64sha256(local.lambda_filename)
+  lambda_filename         = var.package
+  lambda_source_code_hash = filebase64sha256(var.package)
   slackbot_topic          = var.slackbot_topic
 
 
@@ -32,7 +32,7 @@ resource aws_lambda_function callback {
   handler          = "index.handler"
   memory_size      = 1024
   role             = data.aws_iam_role.role.arn
-  runtime          = "nodejs10.x"
+  runtime          = "nodejs12.x"
   source_code_hash = local.lambda_source_code_hash
   tags             = var.tags
   timeout          = 10

@@ -1,29 +1,33 @@
 variable api_name {
-  description = "Slackbot name."
+  description = "Slackbot name"
 }
 
 variable kms_key_arn {
-  description = "KMS Key ARN for Lambda."
+  description = "KMS Key ARN for Lambda"
+}
+
+variable package {
+  description = "Lambda zip package path"
 }
 
 variable role_name {
-  description = "Role name for Lambda."
+  description = "Role name for Lambda"
 }
 
 variable secret_name {
-  description = "Slackbot secretsmanager secret name."
+  description = "Slackbot secretsmanager secret name"
 }
 
 variable slackbot_topic {
-  description = "Slackbot SNS topic name."
+  description = "Slackbot SNS topic name"
 }
 
 variable tags {
-  description = "Lambda function tags."
+  description = "Lambda function tags"
   type        = map(string)
   default     = {}
 }
 
 variable legacy_post_message_topic {
-  description = "Slackbot legacy post message SNS topic name."
+  description = "Slackbot legacy post message SNS topic name"
 }

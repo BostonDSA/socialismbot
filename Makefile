@@ -1,54 +1,55 @@
-modules   := events invite mods welcome
-runtime   := nodejs10.x
-stages    := build plan
-terraform := latest
-build     := $(shell git describe --tags --always)
-packages  := $(foreach module,$(modules),$(module)/package.zip)
-lockfiles := $(foreach module,$(modules),$(module)/package-lock.json)
-shells    := $(foreach stage,$(stages),shell@$(stage))
+MODULES   := events invite mods welcome
+REPO      := boston-dsa/socialismbot
+RUNTIME   := nodejs12.x
+STAGES    := lock zip plan
+TERRAFORM := latest
+LOCKFILES := $(foreach MODULE,$(MODULES),$(MODULE)/package-lock.json)
+PACKAGES  := $(foreach MODULE,$(MODULES),dist/$(MODULE).zip)
+VERSION   := $(shell git describe --tags --always)
 
-.PHONY: all apply clean clobber $(stages) $(shells)
+.PHONY: default apply clean clobber $(STAGES) $(MODULES)
 
-all: $(lockfiles) $(packages)
+default: $(LOCKFILES) $(PACKAGES)
 
-.docker:
+.docker dist:
 	mkdir -p $@
 
-.docker/$(build)@plan: .docker/$(build)@build
-.docker/$(build)@%: | .docker
+.docker/zip: .docker/lock
+.docker/plan: .docker/zip
+.docker/%: | .docker
 	docker build \
 	--build-arg AWS_ACCESS_KEY_ID \
 	--build-arg AWS_DEFAULT_REGION \
 	--build-arg AWS_SECRET_ACCESS_KEY \
-	--build-arg RUNTIME=$(runtime) \
-	--build-arg TERRAFORM=$(terraform) \
-	--build-arg TF_VAR_release=$(build) \
+	--build-arg RUNTIME=$(RUNTIME) \
+	--build-arg TERRAFORM=$(TERRAFORM) \
+	--build-arg TF_VAR_VERSION=$(VERSION) \
 	--iidfile $@ \
-	--tag boston-dsa/socialismbot:$(build)-$* \
-	--target $* .
+	--tag $(REPO):$* \
+	--target $* \
+	.
 
-apply: .docker/$(build)@plan
+.env:
+	cp $@.example $@
+
+apply: .docker/plan
 	docker run --rm \
 	--env AWS_ACCESS_KEY_ID \
 	--env AWS_DEFAULT_REGION \
 	--env AWS_SECRET_ACCESS_KEY \
-	$(shell cat $<)
+	$$(cat $<)
 
 clean:
-	-docker image rm -f $(shell awk {print} .docker/*)
-	-rm -rf .docker
+	rm -rf .docker
 
 clobber: clean
-	-rm -rf $(packages)
+	docker image ls $(REPO) --quiet | uniq | xargs docker image rm --force
+	rm -rf dist
 
-$(lockfiles) $(packages): .docker/$(build)@build
-	docker run --rm \
-	$(shell cat $<) \
-	cat $@ > $@
+$(LOCKFILES): .docker/lock
+	docker run --rm --entrypoint cat $$(cat $<) $@ > $@
 
-$(stages): %: .docker/$(build)@%
+$(PACKAGES): .docker/zip | dist
+	docker run --rm --entrypoint cat $$(cat $<) $@ > $@
 
-$(shells): shell@%: .docker/$(build)@%
-	docker run --rm -it \
-	--entrypoint /bin/sh \
-	$(shell cat $<)
+$(STAGES): %: .docker/%

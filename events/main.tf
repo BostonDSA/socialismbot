@@ -1,6 +1,6 @@
 locals {
-  lambda_filename         = "${path.module}/package.zip"
-  lambda_source_code_hash = filebase64sha256(local.lambda_filename)
+  lambda_filename         = var.package
+  lambda_source_code_hash = filebase64sha256(var.package)
 
   filter_policy = {
     id   = ["events", "events_post"]
@@ -103,7 +103,7 @@ data aws_lambda_function facebook_gcal_sync {
 
 module slash_command {
   source         = "amancevice/slackbot-slash-command/aws"
-  version        = "~> 13.0"
+  version        = "~> 14.0"
   slash_command  = "events"
   api_name       = var.api_name
   kms_key_arn    = var.kms_key_arn
@@ -146,7 +146,7 @@ resource aws_lambda_function callback {
   handler          = "index.handler"
   memory_size      = 1024
   role             = data.aws_iam_role.role.arn
-  runtime          = "nodejs10.x"
+  runtime          = "nodejs12.x"
   source_code_hash = local.lambda_source_code_hash
   tags             = var.tags
   timeout          = 30

@@ -1,6 +1,6 @@
 locals {
-  lambda_filename         = "${path.module}/package.zip"
-  lambda_source_code_hash = filebase64sha256(local.lambda_filename)
+  lambda_filename         = var.package
+  lambda_source_code_hash = filebase64sha256(var.package)
 
   ask_sc            = "C9Z3M55DG"
   generaldiscussion = "C7M1CCBAQ"
@@ -147,7 +147,7 @@ data aws_sns_topic legacy_post_message {
 
 module slash_command {
   source         = "amancevice/slackbot-slash-command/aws"
-  version        = "~> 13.0"
+  version        = "~> 14.0"
   api_name       = var.api_name
   kms_key_arn    = var.kms_key_arn
   lambda_tags    = var.tags
@@ -184,7 +184,7 @@ resource aws_lambda_function team_join {
   handler          = "index.handler"
   memory_size      = 1024
   role             = data.aws_iam_role.role.arn
-  runtime          = "nodejs10.x"
+  runtime          = "nodejs12.x"
   source_code_hash = local.lambda_source_code_hash
   tags             = var.tags
   timeout          = 3

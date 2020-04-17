@@ -3,8 +3,9 @@ locals {
   lambda_source_code_hash = filebase64sha256(var.package)
 
   filter_policy = {
-    id   = ["invite"]
-    type = ["callback"]
+    callback_id = ["invite"]
+    id          = ["interactive_message"]
+    type        = ["callback"]
   }
 }
 

@@ -5,8 +5,9 @@ locals {
 
 
   filter_policy = {
-    id   = ["report_message_action", "report_message_submit"]
-    type = ["callback"]
+    callback_id = ["report_message_action", "report_message_submit"]
+    id          = ["dialog_submission", "interactive_message"]
+    type        = ["callback"]
   }
 }
 

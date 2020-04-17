@@ -171,7 +171,7 @@ resource aws_cloudwatch_event_target weekly_reminders {
   input = jsonencode(local.weekly_reminders)
 }
 
-resource aws_cloudwatch_log_group callback_logs {
+resource aws_cloudwatch_log_group team_join_logs {
   name              = "/aws/lambda/${aws_lambda_function.team_join.function_name}"
   retention_in_days = 30
   tags              = var.tags

@@ -28,7 +28,7 @@ locals {
 }
 
 # Get information _about_ Slackbot secret, but not the secrets themselves
-data "terraform_remote_state" "secrets" {
+data terraform_remote_state secrets {
   backend = "s3"
   config = {
     bucket  = "terraform.bostondsa.org"
@@ -41,27 +41,60 @@ data "terraform_remote_state" "secrets" {
 # Core slackbot app
 module socialismbot {
   source         = "amancevice/slackbot/aws"
-  version        = "~> 16.0"
+  version        = "~> 18.1"
   api_name       = "socialismbot"
   api_stage_name = "v1"
   app_name       = "slack-socialismbot"
   base_url       = "/slack"
-  kms_key_id     = data.terraform_remote_state.secrets.outputs.kms_key_id
+  kms_key_arn    = data.terraform_remote_state.secrets.outputs.kms_key.arn
   lambda_tags    = local.tags
   log_group_tags = local.tags
   role_tags      = local.tags
-  secret_name    = data.terraform_remote_state.secrets.outputs.secret_name
+  secret_name    = data.terraform_remote_state.secrets.outputs.secret.name
 }
+
+module post_message {
+  source               = "amancevice/slackbot-chat/aws"
+  version              = "~> 1.0"
+  api_name             = module.socialismbot.api.name
+  chat_method          = "postMessage"
+  kms_key_arn          = data.terraform_remote_state.secrets.outputs.kms_key.arn
+  lambda_description   = "Post Slack message via SNS"
+  lambda_function_name = "slack-socialismbot-api-post-message"
+  lambda_tags          = local.tags
+  lambda_timeout       = 15
+  log_group_tags       = local.tags
+  role_arn             = module.socialismbot.role.arn
+  secret_name          = data.terraform_remote_state.secrets.outputs.secret.name
+  topic_arn            = module.socialismbot.topic.arn
+}
+
+module post_ephemeral {
+  source               = "amancevice/slackbot-chat/aws"
+  version              = "~> 1.0"
+  api_name             = module.socialismbot.api.name
+  chat_method          = "postEphemeral"
+  kms_key_arn          = data.terraform_remote_state.secrets.outputs.kms_key.arn
+  lambda_description   = "Post Slack message via SNS"
+  lambda_function_name = "slack-socialismbot-api-post-ephemeral"
+  lambda_tags          = local.tags
+  lambda_timeout       = 15
+  log_group_tags       = local.tags
+  role_arn             = module.socialismbot.role.arn
+  secret_name          = data.terraform_remote_state.secrets.outputs.secret.name
+  topic_arn            = module.socialismbot.topic.arn
+}
+
 
 # Events module for posting daily events
 module events {
   source         = "./events"
   package        = "./dist/events.zip"
-  api_name       = module.socialismbot.api_name
-  kms_key_arn    = module.socialismbot.kms_key_arn
-  role_name      = module.socialismbot.role_name
-  slackbot_topic = module.socialismbot.topic_name
-  secret_name    = module.socialismbot.secret_name
+  api_name       = module.socialismbot.api.name
+  kms_key_arn    = data.terraform_remote_state.secrets.outputs.kms_key.arn
+  role_name      = module.socialismbot.role.name
+  slackbot_topic = module.socialismbot.topic.name
+  secret_name    = data.terraform_remote_state.secrets.outputs.secret.name
   channel        = local.channel_events
   tags           = local.tags
 }
@@ -70,11 +103,11 @@ module events {
 module invite {
   source         = "./invite"
   package        = "./dist/invite.zip"
-  api_name       = module.socialismbot.api_name
-  kms_key_arn    = module.socialismbot.kms_key_arn
-  role_name      = module.socialismbot.role_name
-  secret_name    = module.socialismbot.secret_name
-  slackbot_topic = module.socialismbot.topic_name
+  api_name       = module.socialismbot.api.name
+  kms_key_arn    = data.terraform_remote_state.secrets.outputs.kms_key.arn
+  role_name      = module.socialismbot.role.name
+  secret_name    = data.terraform_remote_state.secrets.outputs.secret.name
+  slackbot_topic = module.socialismbot.topic.name
   tags           = local.tags
 }
 
@@ -82,11 +115,11 @@ module invite {
 module mods {
   source         = "./mods"
   package        = "./dist/mods.zip"
-  api_name       = module.socialismbot.api_name
-  kms_key_arn    = module.socialismbot.kms_key_arn
-  role_name      = module.socialismbot.role_name
-  secret_name    = module.socialismbot.secret_name
-  slackbot_topic = module.socialismbot.topic_name
+  api_name       = module.socialismbot.api.name
+  kms_key_arn    = data.terraform_remote_state.secrets.outputs.kms_key.arn
+  role_name      = module.socialismbot.role.name
+  secret_name    = data.terraform_remote_state.secrets.outputs.secret.name
+  slackbot_topic = module.socialismbot.topic.name
   channel        = local.channel_mods
   tags           = local.tags
 }
@@ -95,11 +128,11 @@ module mods {
 module welcome {
   source         = "./welcome"
   package        = "./dist/welcome.zip"
-  api_name       = module.socialismbot.api_name
-  kms_key_arn    = module.socialismbot.kms_key_arn
-  role_name      = module.socialismbot.role_name
-  secret_name    = module.socialismbot.secret_name
-  slackbot_topic = module.socialismbot.topic_name
+  api_name       = module.socialismbot.api.name
+  kms_key_arn    = data.terraform_remote_state.secrets.outputs.kms_key.arn
+  role_name      = module.socialismbot.role.name
+  secret_name    = data.terraform_remote_state.secrets.outputs.secret.name
+  slackbot_topic = module.socialismbot.topic.name
   tags           = local.tags
 
   legacy_post_message_topic = aws_sns_topic.legacy_post_message.name
@@ -114,35 +147,35 @@ resource aws_sns_topic legacy_post_ephemeral {
 }
 
 resource aws_sns_topic_subscription legacy_post_message {
-  endpoint  = module.socialismbot.lambda_post_message_arn
+  endpoint  = module.post_message.lambda.arn
   protocol  = "lambda"
   topic_arn = aws_sns_topic.legacy_post_message.arn
 }
 
 resource aws_sns_topic_subscription legacy_post_ephemeral {
-  endpoint  = module.socialismbot.lambda_post_ephemeral_arn
+  endpoint  = module.post_ephemeral.lambda.arn
   protocol  = "lambda"
   topic_arn = aws_sns_topic.legacy_post_ephemeral.arn
 }
 
 output api_name {
   description = "REST API Name"
-  value       = module.socialismbot.api_name
+  value       = module.socialismbot.api.name
 }
 
 output role_name {
   description = "Name of basic execution role for Slackbot lambdas"
-  value       = module.socialismbot.role_name
+  value       = module.socialismbot.role.name
 }
 
 output post_message_topic_arn {
   description = "Slackbot post message SNS topic ARN"
-  value       = module.socialismbot.topic_arn
+  value       = module.socialismbot.topic.arn
 }
 
 output post_ephemeral_topic_arn {
   description = "Slackbot post ephemeral SNS topic ARN"
-  value       = module.socialismbot.topic_arn
+  value       = module.socialismbot.topic.arn
 }
 
 variable VERSION {

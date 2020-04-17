@@ -31,7 +31,7 @@ locals {
 
 module secrets {
   source                   = "amancevice/slackbot-secrets/aws"
-  version                  = "~> 2.0"
+  version                  = "~> 3.0"
   kms_key_alias            = "alias/slack/socialismbot"
   secret_name              = "slack/socialismbot"
   kms_key_tags             = local.tags
@@ -49,60 +49,56 @@ module secrets {
 }
 
 output kms_key_alias {
-  description = "KMS key alias."
+  description = "KMS key alias"
   value       = module.secrets.kms_key_alias
 }
 
-output kms_key_arn {
-  description = "KMS key ARN."
-  value       = module.secrets.kms_key_arn
+output kms_key {
+  description = "KMS key"
+  value       = module.secrets.kms_key
 }
 
-output kms_key_id {
-  description = "KMS key ID."
-  value       = module.secrets.kms_key_id
+output secret {
+  description = "Slackbot SecretsManager secret"
+  value       = module.secrets.secret
 }
 
-output secret_arn {
-  description = "Slackbot SecretsManager secret ARN."
-  value       = module.secrets.secret_arn
-}
-
-output secret_name {
-  description = "Slackbot SecretsManager secret name."
-  value       = module.secrets.secret_name
+output secret_version {
+  description = "Slackbot SecretsManager secret version"
+  value       = module.secrets.secret_version
+  sensitive   = true
 }
 
 variable release {
-  description = "Release tag."
+  description = "Release tag"
 }
 
 variable slack_client_id {
-  description = "Slack Client ID."
+  description = "Slack Client ID"
 }
 
 variable slack_client_secret {
-  description = "Slack Client Secret."
+  description = "Slack Client Secret"
 }
 
 variable slack_legacy_token {
-  description = "Slack legacy OAuth token."
+  description = "Slack legacy OAuth token"
 }
 
 variable slack_oauth_redirect_uri {
-  description = "Slack OAuth redirect URI."
-  default     = ""
+  description = "Slack OAuth redirect URI"
+  default     = null
 }
 
 variable slack_signing_secret {
-  description = "Slack signing secret."
+  description = "Slack signing secret"
 }
 
 variable slack_signing_version {
-  description = "Slack signing version."
+  description = "Slack signing version"
   default     = "v0"
 }
 
 variable slack_token {
-  description = "Slack bot OAuth token."
+  description = "Slack bot OAuth token"
 }

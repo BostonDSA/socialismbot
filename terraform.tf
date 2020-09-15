@@ -1,15 +1,16 @@
 terraform {
-  backend "s3" {
+  required_version = "~> 0.13"
+
+  backend s3 {
     bucket = "terraform.bostondsa.org"
     key    = "socialismbot.tfstate"
     region = "us-east-1"
   }
-
-  required_version = ">= 0.12"
 }
 
-provider "aws" {
-  version = "~> 2.7"
+provider aws {
+  region  = "us-east-1"
+  version = "~> 3.6"
 }
 
 locals {
@@ -84,7 +85,6 @@ module post_ephemeral {
   secret_name          = data.terraform_remote_state.secrets.outputs.secret.name
   topic_arn            = module.socialismbot.topic.arn
 }
-
 
 # Events module for posting daily events
 module events {

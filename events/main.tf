@@ -62,15 +62,15 @@ locals {
   }
 }
 
-data aws_kms_key key {
+data "aws_kms_key" "key" {
   key_id = "alias/aws/secretsmanager"
 }
 
-data aws_secretsmanager_secret google {
+data "aws_secretsmanager_secret" "google" {
   name = "google/socialismbot"
 }
 
-data aws_iam_policy_document events {
+data "aws_iam_policy_document" "events" {
   statement {
     sid       = "DecryptKmsKey"
     actions   = ["kms:Decrypt"]
@@ -90,19 +90,19 @@ data aws_iam_policy_document events {
   }
 }
 
-data aws_iam_role role {
+data "aws_iam_role" "role" {
   name = var.role_name
 }
 
-data aws_sns_topic slackbot {
+data "aws_sns_topic" "slackbot" {
   name = var.slackbot_topic
 }
 
-data aws_lambda_function facebook_gcal_sync {
+data "aws_lambda_function" "facebook_gcal_sync" {
   function_name = "facebook-gcal-sync"
 }
 
-module slash_command {
+module "slash_command" {
   source         = "amancevice/slackbot-slash-command/aws"
   version        = "~> 14.0"
   slash_command  = "events"
@@ -116,31 +116,31 @@ module slash_command {
   slackbot_topic = data.aws_sns_topic.slackbot.name
 }
 
-resource aws_cloudwatch_event_rule callback_rule {
+resource "aws_cloudwatch_event_rule" "callback_rule" {
   description         = "Post daily events to Slack"
   name                = "slack-post-events"
   schedule_expression = "cron(0 16 * * ? *)"
 }
 
-resource aws_cloudwatch_event_target callback_target {
+resource "aws_cloudwatch_event_target" "callback_target" {
   rule  = aws_cloudwatch_event_rule.callback_rule.name
   arn   = aws_sns_topic.events.arn
   input = jsonencode(local.payload)
 }
 
-resource aws_cloudwatch_log_group callback_logs {
+resource "aws_cloudwatch_log_group" "callback_logs" {
   name              = "/aws/lambda/${aws_lambda_function.callback.function_name}"
   retention_in_days = 30
   tags              = var.tags
 }
 
-resource aws_iam_role_policy events {
+resource "aws_iam_role_policy" "events" {
   name   = "events"
   policy = data.aws_iam_policy_document.events.json
   role   = data.aws_iam_role.role.id
 }
 
-resource aws_lambda_function callback {
+resource "aws_lambda_function" "callback" {
   description      = "Publish Google Calendar events to Slack"
   filename         = local.lambda_filename
   function_name    = "slack-socialismbot-callback-events"
@@ -166,31 +166,31 @@ resource aws_lambda_function callback {
   }
 }
 
-resource aws_lambda_permission events {
+resource "aws_lambda_permission" "events" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.callback.function_name
   principal     = "sns.amazonaws.com"
   source_arn    = aws_sns_topic.events.arn
 }
 
-resource aws_lambda_permission events_callback {
+resource "aws_lambda_permission" "events_callback" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.callback.function_name
   principal     = "sns.amazonaws.com"
   source_arn    = data.aws_sns_topic.slackbot.arn
 }
 
-resource aws_sns_topic events {
+resource "aws_sns_topic" "events" {
   name = "slack-${var.api_name}-events"
 }
 
-resource aws_sns_topic_subscription events {
+resource "aws_sns_topic_subscription" "events" {
   endpoint  = aws_lambda_function.callback.arn
   protocol  = "lambda"
   topic_arn = aws_sns_topic.events.arn
 }
 
-resource aws_sns_topic_subscription events_callback {
+resource "aws_sns_topic_subscription" "events_callback" {
   endpoint      = aws_lambda_function.callback.arn
   protocol      = "lambda"
   topic_arn     = data.aws_sns_topic.slackbot.arn

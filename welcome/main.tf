@@ -133,19 +133,19 @@ locals {
   }
 }
 
-data aws_iam_role role {
+data "aws_iam_role" "role" {
   name = var.role_name
 }
 
-data aws_sns_topic slackbot {
+data "aws_sns_topic" "slackbot" {
   name = var.slackbot_topic
 }
 
-data aws_sns_topic legacy_post_message {
+data "aws_sns_topic" "legacy_post_message" {
   name = var.legacy_post_message_topic
 }
 
-module slash_command {
+module "slash_command" {
   source         = "amancevice/slackbot-slash-command/aws"
   version        = "~> 14.0"
   api_name       = var.api_name
@@ -159,25 +159,25 @@ module slash_command {
   slackbot_topic = data.aws_sns_topic.slackbot.name
 }
 
-resource aws_cloudwatch_event_rule weekly_reminders {
+resource "aws_cloudwatch_event_rule" "weekly_reminders" {
   description         = "Post weekly reminders to Slack"
   name                = "slack-post-reminders"
   schedule_expression = "cron(0 14 ? * MON *)"
 }
 
-resource aws_cloudwatch_event_target weekly_reminders {
+resource "aws_cloudwatch_event_target" "weekly_reminders" {
   rule  = aws_cloudwatch_event_rule.weekly_reminders.name
   arn   = data.aws_sns_topic.legacy_post_message.arn
   input = jsonencode(local.weekly_reminders)
 }
 
-resource aws_cloudwatch_log_group team_join_logs {
+resource "aws_cloudwatch_log_group" "team_join_logs" {
   name              = "/aws/lambda/${aws_lambda_function.team_join.function_name}"
   retention_in_days = 30
   tags              = var.tags
 }
 
-resource aws_lambda_function team_join {
+resource "aws_lambda_function" "team_join" {
   description      = "Publish Google Calendar events to Slack"
   filename         = local.lambda_filename
   function_name    = "slack-socialismbot-event-team-join"
@@ -197,14 +197,14 @@ resource aws_lambda_function team_join {
   }
 }
 
-resource aws_lambda_permission team_join {
+resource "aws_lambda_permission" "team_join" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.team_join.function_name
   principal     = "sns.amazonaws.com"
   source_arn    = data.aws_sns_topic.slackbot.arn
 }
 
-resource aws_sns_topic_subscription team_join {
+resource "aws_sns_topic_subscription" "team_join" {
   endpoint      = aws_lambda_function.team_join.arn
   protocol      = "lambda"
   topic_arn     = data.aws_sns_topic.slackbot.arn

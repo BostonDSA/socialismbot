@@ -1,14 +1,14 @@
 terraform {
   required_version = "~> 0.13"
 
-  backend s3 {
+  backend "s3" {
     bucket = "terraform.bostondsa.org"
     key    = "socialismbot.tfstate"
     region = "us-east-1"
   }
 }
 
-provider aws {
+provider "aws" {
   region  = "us-east-1"
   version = "~> 3.6"
 }
@@ -29,7 +29,7 @@ locals {
 }
 
 # Get information _about_ Slackbot secret, but not the secrets themselves
-data terraform_remote_state secrets {
+data "terraform_remote_state" "secrets" {
   backend = "s3"
   config = {
     bucket  = "terraform.bostondsa.org"
@@ -40,7 +40,7 @@ data terraform_remote_state secrets {
 }
 
 # Core slackbot app
-module socialismbot {
+module "socialismbot" {
   source         = "amancevice/slackbot/aws"
   version        = "~> 18.1"
   api_name       = "socialismbot"
@@ -54,7 +54,7 @@ module socialismbot {
   secret_name    = data.terraform_remote_state.secrets.outputs.secret.name
 }
 
-module post_message {
+module "post_message" {
   source               = "amancevice/slackbot-chat/aws"
   version              = "~> 1.0"
   api_name             = module.socialismbot.api.name
@@ -70,7 +70,7 @@ module post_message {
   topic_arn            = module.socialismbot.topic.arn
 }
 
-module post_ephemeral {
+module "post_ephemeral" {
   source               = "amancevice/slackbot-chat/aws"
   version              = "~> 1.0"
   api_name             = module.socialismbot.api.name
@@ -87,7 +87,7 @@ module post_ephemeral {
 }
 
 # Events module for posting daily events
-module events {
+module "events" {
   source         = "./events"
   package        = "./dist/events.zip"
   api_name       = module.socialismbot.api.name
@@ -100,7 +100,7 @@ module events {
 }
 
 # Invite members to Slack
-module invite {
+module "invite" {
   source         = "./invite"
   package        = "./dist/invite.zip"
   api_name       = module.socialismbot.api.name
@@ -112,7 +112,7 @@ module invite {
 }
 
 # Moderator module for allowing members to report messages to mods
-module mods {
+module "mods" {
   source         = "./mods"
   package        = "./dist/mods.zip"
   api_name       = module.socialismbot.api.name
@@ -125,7 +125,7 @@ module mods {
 }
 
 # Welcome module for welcoming members to the Slack
-module welcome {
+module "welcome" {
   source         = "./welcome"
   package        = "./dist/welcome.zip"
   api_name       = module.socialismbot.api.name
@@ -138,46 +138,46 @@ module welcome {
   legacy_post_message_topic = aws_sns_topic.legacy_post_message.name
 }
 
-resource aws_sns_topic legacy_post_message {
+resource "aws_sns_topic" "legacy_post_message" {
   name = "slack-socialismbot-post-message"
 }
 
-resource aws_sns_topic legacy_post_ephemeral {
+resource "aws_sns_topic" "legacy_post_ephemeral" {
   name = "slack-socialismbot-post-ephemeral"
 }
 
-resource aws_sns_topic_subscription legacy_post_message {
+resource "aws_sns_topic_subscription" "legacy_post_message" {
   endpoint  = module.post_message.lambda.arn
   protocol  = "lambda"
   topic_arn = aws_sns_topic.legacy_post_message.arn
 }
 
-resource aws_sns_topic_subscription legacy_post_ephemeral {
+resource "aws_sns_topic_subscription" "legacy_post_ephemeral" {
   endpoint  = module.post_ephemeral.lambda.arn
   protocol  = "lambda"
   topic_arn = aws_sns_topic.legacy_post_ephemeral.arn
 }
 
-output api_name {
+output "api_name" {
   description = "REST API Name"
   value       = module.socialismbot.api.name
 }
 
-output role_name {
+output "role_name" {
   description = "Name of basic execution role for Slackbot lambdas"
   value       = module.socialismbot.role.name
 }
 
-output post_message_topic_arn {
+output "post_message_topic_arn" {
   description = "Slackbot post message SNS topic ARN"
   value       = module.socialismbot.topic.arn
 }
 
-output post_ephemeral_topic_arn {
+output "post_ephemeral_topic_arn" {
   description = "Slackbot post ephemeral SNS topic ARN"
   value       = module.socialismbot.topic.arn
 }
 
-variable VERSION {
+variable "VERSION" {
   description = "Release tag name"
 }

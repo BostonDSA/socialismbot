@@ -1,5 +1,5 @@
 terraform {
-  backend s3 {
+  backend "s3" {
     bucket = "terraform.bostondsa.org"
     key    = "socialismbot-secrets.tfstate"
     region = "us-east-1"
@@ -8,7 +8,7 @@ terraform {
   required_version = ">= 0.12"
 }
 
-provider aws {
+provider "aws" {
   version = "~> 2.7"
 }
 
@@ -29,7 +29,7 @@ locals {
   }
 }
 
-module secrets {
+module "secrets" {
   source                   = "amancevice/slackbot-secrets/aws"
   version                  = "~> 3.0"
   kms_key_alias            = "alias/slack/socialismbot"
@@ -48,57 +48,57 @@ module secrets {
   }
 }
 
-output kms_key_alias {
+output "kms_key_alias" {
   description = "KMS key alias"
   value       = module.secrets.kms_key_alias
 }
 
-output kms_key {
+output "kms_key" {
   description = "KMS key"
   value       = module.secrets.kms_key
 }
 
-output secret {
+output "secret" {
   description = "Slackbot SecretsManager secret"
   value       = module.secrets.secret
 }
 
-output secret_version {
+output "secret_version" {
   description = "Slackbot SecretsManager secret version"
   value       = module.secrets.secret_version
   sensitive   = true
 }
 
-variable release {
+variable "release" {
   description = "Release tag"
 }
 
-variable slack_client_id {
+variable "slack_client_id" {
   description = "Slack Client ID"
 }
 
-variable slack_client_secret {
+variable "slack_client_secret" {
   description = "Slack Client Secret"
 }
 
-variable slack_legacy_token {
+variable "slack_legacy_token" {
   description = "Slack legacy OAuth token"
 }
 
-variable slack_oauth_redirect_uri {
+variable "slack_oauth_redirect_uri" {
   description = "Slack OAuth redirect URI"
   default     = null
 }
 
-variable slack_signing_secret {
+variable "slack_signing_secret" {
   description = "Slack signing secret"
 }
 
-variable slack_signing_version {
+variable "slack_signing_version" {
   description = "Slack signing version"
   default     = "v0"
 }
 
-variable slack_token {
+variable "slack_token" {
   description = "Slack bot OAuth token"
 }

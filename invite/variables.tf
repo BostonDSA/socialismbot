@@ -1,28 +1,28 @@
-variable api_name {
+variable "api_name" {
   description = "Slackbot REST API Gateway Name"
 }
 
-variable kms_key_arn {
+variable "kms_key_arn" {
   description = "KMS Key ARN for Lambdas"
 }
 
-variable package {
+variable "package" {
   description = "Lambda zip package path"
 }
 
-variable role_name {
+variable "role_name" {
   description = "Slackbot role name"
 }
 
-variable secret_name {
+variable "secret_name" {
   description = "Slackbot secretsmanager secret name"
 }
 
-variable slackbot_topic {
+variable "slackbot_topic" {
   description = "Slackbot SNS topic name"
 }
 
-variable tags {
+variable "tags" {
   description = "AWS resource tags"
   type        = map(string)
   default     = {}

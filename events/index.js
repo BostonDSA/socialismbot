@@ -122,7 +122,7 @@ const submitPost = async (payload) => {
         type: 'button',
         name: 'subscribe',
         text: 'Subscribe',
-        url:  `https://calendars.dsausa.org/${GOOGLE_CALENDAR_ID}`,
+        url:  `${GOOGLE_URL}`,
       },
     ],
   };

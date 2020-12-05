@@ -23,7 +23,7 @@ locals {
         color       = "#b71c1c"
         fallback    = "Chapter Events"
         mrkdwn_in   = ["text"]
-        text        = "Post today's events to a conversation you are in.\nOr copy <https://facebook.com/BostonDSA|facebook> events to <https://calendar.google.com/calendar/r?cid=dTIxbThrdDhiYjFsZmxwOGpwbWQzMTdpaWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ|Google Calendar> _(this auto-runs hourly)_."
+        text        = "Post today's events to a conversation you are in.\nOr copy <https://facebook.com/BostonDSA|facebook> events to <https://calendar.google.com/calendar/r?cid=u21m8kt8bb1lflp8jpmd317iik%40group.calendar.google.com|Google Calendar> _(this auto-runs hourly)_."
 
         actions = [
           {
@@ -54,7 +54,7 @@ locals {
             type = "button"
             name = "subscribe"
             text = "Subscribe"
-            url  = "https://calendars.dsausa.org/u21m8kt8bb1lflp8jpmd317iik%40group.calendar.google.com"
+            url  = "https://calendar.google.com/calendar/r?cid=u21m8kt8bb1lflp8jpmd317iik%40group.calendar.google.com"
           },
         ]
       },

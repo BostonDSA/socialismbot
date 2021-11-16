@@ -4,7 +4,7 @@
     "request-promise": "^4.2.2"
   },
   "devDependencies": {
-    "aws-sdk": "^2.556.0"
+    "aws-sdk": "^2.814.0"
   },
   "private": true
 }
